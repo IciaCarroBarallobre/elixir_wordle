@@ -1,5 +1,13 @@
 # Elixir Wordle 
 
+## Table of contents
+1. [Game description](#game-description)
+2. [Design](#design)
+3. [Contributing](#contributing)
+
+
+## Game description
+
 In **Elixir Wordle**, **players try to guess an Elixir-related word based on the frequency of its letters in a web-based game**. 
 The goal is to select the correct letters and arrange them in the correct order.
 
@@ -26,7 +34,7 @@ INFO: Did you know that tuples store elements contiguously in memory?
 This means accessing a tuple element by index or getting the tuple size is a fast operation.
 ```
 
-## Desgin
+## Design
 To access additional information about design, follow [the link](./docs/design.md).
 
 ## Contributing
