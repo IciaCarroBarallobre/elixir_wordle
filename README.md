@@ -27,7 +27,7 @@ This means accessing a tuple element by index or getting the tuple size is a fas
 ```
 
 ## Desgin
-To access additional information about design, follow [the link](./doc/design.md).
+To access additional information about design, follow [the link](./docs/design.md).
 
 ## Contributing
 Your contributions to this project are highly valued. If you have a suggestion for a new feature or encounter a bug, kindly open an issue or submit a pull request.
