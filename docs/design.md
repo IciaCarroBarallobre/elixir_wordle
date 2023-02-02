@@ -22,8 +22,8 @@ Main sequence of the page, including layers interation (browser, endpoints, ...,
 
 ### Mockup
 
-<img align="left" width="500px" alt="PNG" src="/docs/images/mockups/page1.png" />
-<img align="right" width="430px" alt="PNG" src="/docs/images/mockups/page2.png" />
+| <img align="left" width="500px" alt="PNG" src="/docs/images/mockups/page1.png" /> | <img align="right" width="430px" alt="PNG" src="/docs/images/mockups/page2.png" /> |
+| -- | -- | 
 
 
 ### Other ideas
