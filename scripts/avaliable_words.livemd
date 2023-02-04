@@ -1,0 +1,282 @@
+# Extract all words avaliables in a repo
+
+```elixir
+Mix.install([
+  {:httpoison, "~> 1.8"},
+  {:poison, "~> 5.0"},
+  {:jason, "~> 1.4"},
+  {:livebook_env, "~> 1.0"}
+])
+```
+
+## Choose a version & clone the repo
+
+```elixir
+LivebookEnv.import_dotenv(__DIR__ <> "/.env")
+```
+
+```elixir
+default_version = "v1.14.0"
+
+version =
+  System.get_env("VERSION") ||
+    default_version
+    |> IO.inspect(label: "version")
+```
+
+```elixir
+## Params
+repo_name = "elixir"
+repo_url = "https://github.com/elixir-lang/#{repo_name}.git"
+# __DIR__ Current livebook file root
+save_root_file = (__DIR__ <> "/avaliable_words.json") |> IO.inspect(label: "Save file root")
+
+{cd, status_error} = System.shell("echo %cd%")
+
+cd =
+  cd
+  |> String.replace(["\r", "\n"], "")
+  |> String.replace("\\", "/")
+
+elixir_folder_root = (cd <> "/elixir") |> IO.inspect(label: "Elixir folder root")
+```
+
+```elixir
+{_, status} = System.shell("git clone --branch #{version} --single-branch #{repo_url} ")
+
+case status do
+  0 -> "Git clone done!"
+  128 -> "This folder already exist"
+  _ -> "Error"
+end
+```
+
+## Analyze files and get the words
+
+```elixir
+defmodule AvaliableWords do
+  @moduledoc """
+  GenServerWords is a GenServer API which contains as a state a MapSet of Words.
+  A word is a tuple composed of {answer, explanation, clue}.
+  Its functionality is to return a random word and deleting this word
+  from state, the MapSet of Words.
+
+  """
+
+  def get_words_in_a_folder(root, file_extensions, ignore_folder \\ nil) do
+    Enum.reduce(
+      get_files(root, file_extensions, ignore_folder),
+      [],
+      fn filename, acc ->
+        {:ok, content} = File.read(filename)
+        (content |> get_words_in_a_string()) ++ acc
+      end
+    )
+    |> Enum.uniq()
+  end
+
+  defp get_files(root, file_extensions, ignore_folder) do
+    result =
+      for(extension <- file_extensions, do: Path.wildcard("#{root}/**/*.#{extension}"))
+      |> List.flatten()
+
+    (ignore_folder &&
+       Enum.filter(result, fn str -> not String.contains?(str, ignore_folder) end)) ||
+      result
+  end
+
+  def get_words_in_a_string(content) do
+    Regex.replace(~r/"""[^"]+"""/, content, "")
+    |> String.replace(~r/[\d]+/, "")
+    |> String.split(
+      [
+        "\n",
+        "\t",
+        "\r",
+        "\"",
+        "/",
+        "\\",
+        " ",
+        ".",
+        ",",
+        ":",
+        ";",
+        "%",
+        "&",
+        ">",
+        "<",
+        "(",
+        ")",
+        "[",
+        "]",
+        "{",
+        "}",
+        "+",
+        "=",
+        "-",
+        "*",
+        "/",
+        "^",
+        "|",
+        "`",
+        "@",
+        "'",
+        "?",
+        "~",
+        "!",
+        "#",
+        "$",
+        "_"
+      ],
+      trim: true
+    )
+    |> Enum.uniq()
+    |> Enum.filter(fn str ->
+      String.length(str) > 1 and
+        Regex.match?(~r/[a-zA-Z]+/, str)
+    end)
+    |> Enum.map(&String.downcase(&1))
+  end
+end
+```
+
+```elixir
+ExUnit.start(auto_run: false)
+
+defmodule CalcutorTest do
+  use ExUnit.Case, async: false
+
+  @elixir_words MapSet.new(
+                  AvaliableWords.get_words_in_a_folder(
+                    elixir_folder_root <> "/lib",
+                    ["exs", "ex"],
+                    "test/"
+                  )
+                )
+
+  test "check if some common words, exists" do
+    frameworks_and_modules = [
+      "phoenix",
+      "enum",
+      "io",
+      "kernel",
+      "exunit",
+      "exdoc",
+      "mix",
+      "iex",
+      "genserver"
+    ]
+
+    concepts = ["pattern", "matching", "module", "recursion", "attribute"]
+    inject_code = ["alias", "import", "use", "alias"]
+    languages = ["elixir", "erlang"]
+
+    types = [
+      "string",
+      "float",
+      "floating",
+      "point",
+      "numbers",
+      "integer",
+      "boolean",
+      "bit",
+      "map",
+      "tuples",
+      "anonymous",
+      "function",
+      "list",
+      "atom",
+      "map",
+      "mapset",
+      "charlist",
+      "pid",
+      "nil",
+      "regex",
+      "date",
+      "times",
+      "ast",
+      "range",
+      "struct",
+      "stream",
+      "task",
+      "keyword"
+    ]
+
+    code_flow = ["guard", "case", "cond", "if", "with"]
+
+    other_words = [
+      "head",
+      "tail",
+      "doc",
+      "attribute",
+      "typespec",
+      "comprehension",
+      "error",
+      "try",
+      "rescue",
+      "behaviour",
+      "exception"
+    ]
+
+    assert MapSet.subset?(MapSet.new(frameworks_and_modules), @elixir_words)
+    assert MapSet.subset?(MapSet.new(concepts), @elixir_words)
+    assert MapSet.subset?(MapSet.new(inject_code), @elixir_words)
+    assert MapSet.subset?(MapSet.new(languages), @elixir_words)
+    assert MapSet.subset?(MapSet.new(types), @elixir_words)
+    assert MapSet.subset?(MapSet.new(code_flow), @elixir_words)
+    assert MapSet.subset?(MapSet.new(other_words), @elixir_words)
+  end
+end
+
+ExUnit.run()
+```
+
+```elixir
+words =
+  AvaliableWords.get_words_in_a_folder(
+    elixir_folder_root <> "/lib",
+    ["exs", "ex"],
+    "test/"
+  )
+  |> IO.inspect()
+
+"Number of words: #{length(words)}"
+```
+
+```elixir
+file_content =
+  %{
+    version: version,
+    content: words |> Enum.sort_by(&String.length/1)
+  }
+  |> Poison.encode!()
+
+File.write(save_root_file, file_content)
+```
+
+## Remeber to delete elixir folder!!
+
+```elixir
+{os, _} = :os.type()
+
+status =
+  case os do
+    :win32 ->
+      cmd_elixir_folder_root = String.replace(elixir_folder_root, "/", "\\")
+      {_, status1} = System.shell("del /Q /S #{cmd_elixir_folder_root}")
+      {_, status2} = System.shell("rmdir /Q /S #{cmd_elixir_folder_root}")
+      status1 + status2
+
+    :unix ->
+      {_, status1} = System.shell("rm -rf #{elixir_folder_root}")
+      status1
+
+    _ ->
+      "NotImplementYet" |> IO.inspect(label: "Not deleted")
+  end
+
+case status do
+  0 -> "Done!"
+  _ -> "Error! :("
+end
+```
