@@ -58,8 +58,8 @@ defmodule ElixirWordleWeb.WordleLive do
 
   def wordle_result_to_color_tailwind(atom) do
     case atom do
-      :match -> "bg-elixir_300 border-elixir "
-      :letter_match -> "bg-elixir_100 border-elixir_700"
+      :match -> "bg-purple border-dark_purple "
+      :letter_match -> "bg-lightest_purple border-light_purple"
       :fail -> "bg-slate-100"
       _ -> "bg-slate-50"
     end

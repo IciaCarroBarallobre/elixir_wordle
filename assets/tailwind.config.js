@@ -21,11 +21,11 @@ module.exports = {
         '14': 'repeat(14, minmax(0, 1fr))',
       },
       colors: {
-        brand: "#FD4F00",
-        elixir: "#59098A",
-        elixir_700: "#AC82C1",
-        elixir_300: "#CCB2D9",
-        elixir_100: "#EFE0F7"
+        darkest_purple: "#59098A",
+        dark_purple: "#59098A",
+        purple: "#AC82C1",
+        light_purple: "#CCB2D9",
+        lightest_purple: "#EFE0F7"
       }
     },
   },
