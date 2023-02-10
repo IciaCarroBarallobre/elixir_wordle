@@ -26,13 +26,6 @@ let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute('content');
 let Hooks = {};
-Hooks.Toggle = {
-  mounted() {
-    this.el.addEventListener('toggle-change', (event) => {
-      this.pushEvent('toggle-change', event.detail);
-    });
-  },
-};
 Hooks.KeyboardPress = {
   mounted() {
     this.el.addEventListener('key-press', (event) => {
