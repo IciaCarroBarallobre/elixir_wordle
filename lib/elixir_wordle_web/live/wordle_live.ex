@@ -24,32 +24,38 @@ defmodule ElixirWordleWeb.WordleLive do
   def render(assigns) do
     ~H"""
     <p class="bg-slate-100 rounded adjust-content mx-auto text-center w-fit px-2 mt-2 mb-6">
-    Play a version of Wordle where <strong> all the words are related to Elixir</strong>.
+      Play a version of Wordle where <strong> all the words are related to Elixir</strong>.
     </p>
+    <%!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js">
+    </script> --%>
+    <div x-data="{ count: 0 }">
+      <button x-data @keydown.window.slash="count++" x-on:click="count++">Increment</button>
 
+      <span x-text="count"></span>
+      <span x-uppercase x-on:click="count++">hi</span>
+    </div>
     <!-- grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 -->
-    <div class=
-    {
+    <div class={
       "mx-auto grid grid-cols-#{String.length(@answer.word)} gap-1 max-w-xs w-4/5 "
     }>
       <%= for {word, feedback} <- @guesses do %>
         <%= for {letter, result} <- Enum.zip(word |> String.to_charlist(), feedback) do %>
           <!-- bg-gray-200 bg-yellow-200 bg-green-200 -->
-          <div class= {
+          <div class={
             "  justify-content "
             <> "text-gray-800 font-semibold text-xl uppercase text-center "
             <> "rounded p-2 "
             <> wordle_result_to_color_tailwind(result)
             <> " border-2 border-slate-300  "
           }>
-            <%=  " #{to_string([letter])} "%>
+            <%= " #{to_string([letter])} " %>
           </div>
         <% end %>
       <% end %>
     </div>
 
     <p class="adjust-content mx-auto text-center my-6">
-    Clue: <strong><%= @answer.clue %></strong>.
+      Clue: <strong><%= @answer.clue %></strong>.
     </p>
 
     <.live_component module={ElixirWordleWeb.KeyboardLive} id="keyboard" />
