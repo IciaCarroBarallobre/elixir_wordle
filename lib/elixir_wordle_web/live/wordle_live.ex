@@ -18,7 +18,20 @@ defmodule ElixirWordleWeb.WordleLive do
       {"sigil", [:match, :match, :match, :match, :match, :match]}
     ]
 
-    {:ok, socket |> assign(answer: answer, guesses: guesses)}
+    {:ok, socket |> assign(answer: answer, guesses: guesses, toggle: "off")}
+  end
+
+  def handle_event("toggle-change", %{"toggle" => toggle}, socket) do
+    toggle = if toggle == "1", do: "on", else: "off"
+
+    {:noreply, assign(socket, :toggle, toggle)}
+  end
+
+  def handle_event("key-press", %{"key" => value}, socket) do
+    # value = if value == "1", do: "on", else: "off"
+    IO.inspect(value)
+    # {:noreply, assign(socket, :toggle, toggle)}
+    {:noreply, assign(socket, :value, value)}
   end
 
   def render(assigns) do
@@ -26,13 +39,34 @@ defmodule ElixirWordleWeb.WordleLive do
     <p class="bg-slate-100 rounded adjust-content mx-auto text-center w-fit px-2 mt-2 mb-6">
       Play a version of Wordle where <strong> all the words are related to Elixir</strong>.
     </p>
-    <%!-- <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js">
-    </script> --%>
-    <div x-data="{ count: 0 }">
-      <button x-data @keydown.window.slash="count++" x-on:click="count++">Increment</button>
-
-      <span x-text="count"></span>
-      <span x-uppercase x-on:click="count++">hi</span>
+    <div
+      class="flex items-center justify-start"
+      x-data="{ toggle: '0' }"
+      x-init="() => { $watch('toggle', active => $dispatch('toggle-change', { toggle: active })) }"
+      @keydown.window.slash="toggle === '0' ? toggle = '1' : toggle = '0'"
+      id="toggle-example"
+      phx-hook="Toggle"
+    >
+      <div
+        class="relative w-12 h-6 rounded-full transition duration-200 ease-linear"
+        x-bind:class="[toggle === '1' ? 'bg-green-400' : 'bg-gray-400']"
+      >
+        <label
+          for="toggle"
+          class="absolute left-0 w-6 h-6 mb-2 bg-white border-2 rounded-full cursor-pointer transition transform duration-100 ease-linear"
+          x-bind:class="[toggle === '1' ? 'translate-x-full border-green-400' : 'translate-x-0 border-gray-400']"
+        >
+        </label>
+        <input type="hidden" name="toggle" value="off" />
+        <input
+          type="checkbox"
+          id="toggle"
+          name="toggle"
+          class="hidden"
+          @click="toggle === '0' ? toggle = '1' : toggle = '0'"
+        />
+      </div>
+      <%= @toggle %>
     </div>
     <!-- grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 -->
     <div class={

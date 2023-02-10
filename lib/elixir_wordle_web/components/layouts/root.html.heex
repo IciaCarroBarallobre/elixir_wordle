@@ -8,31 +8,8 @@
       <%= assigns[:page_title] || "ElixirWordle" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
-    <script type="module">
-      import Alpine from 'https://cdn.jsdelivr.net/npm/alpinejs@3.11.1/+esm'
-      console.log(Alpine)
-      import * as githubhotkey from 'https://unpkg.com/@github/hotkey@latest?module'
-      window.githubhotkey = githubhotkey
-      window.Alpine = Alpine
-      console.log(githubhotkey)
-      document.addEventListener('alpine:init', () => {
-
-      });
-      Alpine.start();
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js">
     </script>
-    <%!-- Alpine.directive('uppercase', el => {
-          console.log('uppadr',el);
-            el.textContent = el.textContent.toUpperCase()
-        })
-        Alpine.directive('hotkeys', (el, { expression }, { effect, cleanup }) => {
-          console.log('inited', el);
-          githubhotkey.install(el, expression);
-          cleanup(() => {
-          console.log('destroyed', el);
-            githubhotkey.uninstall(el);
-          });
-        }); --%>
-
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
