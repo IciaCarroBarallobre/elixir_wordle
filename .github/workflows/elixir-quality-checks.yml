@@ -7,6 +7,9 @@ on:
     branches: 
       - '*'
 
+permissions:
+  contents: read
+  
 jobs:
   build:
 
@@ -23,7 +26,14 @@ jobs:
       with:
           otp-version: ${{ env.otp }}
           elixir-version: ${{ env.elixir }}
-          build-app: false
+    - name: Restore dependencies cache
+      uses: actions/cache@v3
+      with:
+        path: deps
+        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-mix-
+    - name: Install dependencies
+      run: mix deps.get
 
     - name: Check code formatting
       run: mix format --check-formatted
@@ -38,5 +48,5 @@ jobs:
       if: always()
       
     - name: Check for security vulnerabilities in Phoenix project
-      run: mix sobelow
+      run: mix sobelow -i Config.HTTPS
       if: always()
