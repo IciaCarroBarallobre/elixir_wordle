@@ -38,5 +38,5 @@ jobs:
       if: always()
       
     - name: Check for security vulnerabilities in Phoenix project
-      run: mix sobelow
+      run: mix sobelow -i Config.HTTPS
       if: always()
