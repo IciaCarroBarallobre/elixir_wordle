@@ -23,7 +23,6 @@ defmodule ElixirWordleWeb.WordleLive do
 
   def handle_event("key-press", %{"key" => value}, socket) do
     # value = if value == "1", do: "on", else: "off"
-    IO.inspect(value)
     # {:noreply, assign(socket, :toggle, toggle)}
     {:noreply, assign(socket, :value, value)}
   end
