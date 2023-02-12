@@ -14,15 +14,18 @@ jobs:
   build:
 
     name: Build and test
-    runs-on: ubuntu20
+    runs-on: ubuntu-20.04
+    env:
+      otp: 25.1.0
+      elixir: 1.14.0
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Elixir
-      uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+    - name: Install OTP and Elixir
+      uses: erlef/setup-beam@v1
       with:
-        elixir-version: '1.14.1' # Define the elixir version [required]
-        otp-version: '25.1' # Define the OTP version [required]
+          otp-version: ${{ env.otp }}
+          elixir-version: ${{ env.elixir }}
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
