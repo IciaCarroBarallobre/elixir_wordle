@@ -5,13 +5,16 @@ defmodule ElixirWordleWeb.KeyboardLive do
     ~H"""
     <div
       class={
-        " xl:w-2/3 " # width +1280px (ref: computer 1920)
-        <> "md:w-4/5 " # width 726px - 1280px (ref: IPAD)
-        <> " mx-auto w-full px-2 mb-5 " # width -726px (ref: phones)
-        },
+        # width +1280px (ref: computer 1920)
+        # width 726px - 1280px (ref: IPAD)
+        # width -726px (ref: phones)
+        " xl:w-2/3 " <>
+          "md:w-4/5 " <>
+          " mx-auto w-full px-2 mb-5 "
+      }
+      ,
       aria-label="Keyboard"
     >
-
       <%= for {keyboard_line, span} <- [
           {["Q","W","E","R","T","Y","U","I","O","P"], 0},
           {["A","S","D","F","G","H","J","K", "L"], 0},
