@@ -21,21 +21,14 @@ import 'phoenix_html';
 import { Socket } from 'phoenix';
 import { LiveSocket } from 'phoenix_live_view';
 import topbar from '../vendor/topbar';
+import KeyboardPress from "./hooks/keyboard_press";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute('content');
-let Hooks = {};
-Hooks.KeyboardPress = {
-  mounted() {
-    this.el.addEventListener('key-press', (event) => {
-      console.log(event.detail);
-      this.pushEvent('key-press', event.detail);
-    });
-  },
-};
+
 let liveSocket = new LiveSocket('/live', Socket, {
-  hooks: Hooks,
+  hooks: {KeyboardPress},
   params: { _csrf_token: csrfToken },
   dom: {
     onBeforeElUpdated(from, to) {

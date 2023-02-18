@@ -1,30 +1,71 @@
 defmodule ElixirWordleWeb.WordleLive do
   use ElixirWordleWeb, :live_view
+  alias ElixirWordle.WordleServerMock, as: WordleServerMock
+  @max_attempts 6
 
   def mount(_params, _session, socket) do
-    answer = %{
-      word: "sigil",
-      clue: "Mechanisms for working with textual representations",
-      description:
-        " Sigils start with the tilde (~) character which is followed by a letter (which identifies the sigil) and then a delimiter."
-    }
+    {response, info} = WordleServerMock.get_length_and_clue()
 
-    guesses = [
-      {"atoms", [:fail, :fail, :fail, :fail, :letter_match]},
-      {"chars", [:fail, :fail, :fail, :fail, :letter_match]},
-      {"aaaaa", [:fail, :match, :fail, :match, :match]},
-      {"regex", [:fail, :fail, :match, :fail, :fail]},
-      {"signs", [:match, :match, :match, :fail, :fail]},
-      {"sigil", [:match, :match, :match, :match, :match, :match]}
-    ]
+    case response do
+      :ok ->
+        %{length: length, clue: clue} = info
 
-    {:ok, socket |> assign(answer: answer, guesses: guesses, toggle: "off")}
+        {:ok,
+         socket
+         |> assign(
+           guesses: [],
+           attempts: @max_attempts,
+           message: %{},
+           length: length,
+           clue: clue
+         )}
+
+      :error ->
+        %{error: error_msg} = info
+
+        {:ok,
+         socket
+         |> assign(
+           guesses: [],
+           attempts: 0,
+           message: %{error: error_msg},
+           length: 0,
+           clue: ""
+         )}
+    end
   end
 
-  def handle_event("key-press", %{"key" => value}, socket) do
-    # value = if value == "1", do: "on", else: "off"
-    # {:noreply, assign(socket, :toggle, toggle)}
-    {:noreply, assign(socket, :value, value)}
+  def handle_event("submit", %{"guess" => guess}, socket) do
+    cond do
+      socket.assigns.attempts == 0 ->
+        {:noreply, assign(socket, message: %{error: "No more attempts"})}
+
+      String.length(guess) < socket.assigns.length ->
+        {:noreply, assign(socket, message: %{error: "Not enough letters"})}
+
+      true ->
+        {response, info} = WordleServerMock.feedback(guess)
+
+        case response do
+          :ok ->
+            %{guess: guess, feedback: feedback} = info
+            number_of_attempts = socket.assigns.attempts - 1
+
+            {
+              :noreply,
+              socket
+              |> assign(
+                guesses: [{guess, feedback} | socket.assigns.guesses],
+                attempts: number_of_attempts
+              )
+              |> push_event("new_attempt", %{attempts: number_of_attempts})
+            }
+
+          :error ->
+            %{error: error_msg} = info
+            {:noreply, socket |> assign(message: %{error: error_msg})}
+        end
+    end
   end
 
   def render(assigns) do
@@ -32,40 +73,35 @@ defmodule ElixirWordleWeb.WordleLive do
     <p class="bg-slate-100 rounded adjust-content mx-auto text-center w-fit px-2 mt-2 mb-6">
       Play a version of Wordle where <strong> all the words are related to Elixir</strong>.
     </p>
-    <!-- grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 -->
-    <div class={
-      "mx-auto grid grid-cols-#{String.length(@answer.word)} gap-1 max-w-xs w-4/5 "
-    }>
-      <%= for {word, feedback} <- @guesses do %>
-        <%= for {letter, result} <- Enum.zip(word |> String.to_charlist(), feedback) do %>
-          <!-- bg-gray-200 bg-yellow-200 bg-green-200 -->
-          <div class={
-            "  justify-content "
-            <> "text-gray-800 font-semibold text-xl uppercase text-center "
-            <> "rounded p-2 "
-            <> wordle_result_to_color_tailwind(result)
-            <> " border-2 border-slate-300  "
-          }>
-            <%= " #{to_string([letter])} " %>
-          </div>
-        <% end %>
-      <% end %>
+
+    <.live_component module={ElixirWordleWeb.PopupOfBoard} id="popupofboard" message={@message} />
+
+    <div id="board" class=" grid grid-cols-1 gap-y-1">
+      <.live_component
+        module={ElixirWordleWeb.GuessesBoard}
+        id="guesses"
+        word_max_length={@length}
+        guesses={@guesses}
+      />
+
+      <.live_component
+        module={ElixirWordleWeb.InputsBoard}
+        id="inputs"
+        attempts={@attempts}
+        word_max_length={@length}
+      />
     </div>
 
     <p class="adjust-content mx-auto text-center my-6">
-      Clue: <strong><%= @answer.clue %></strong>.
+      Clue: <strong><%= @clue %></strong>.
     </p>
 
-    <.live_component module={ElixirWordleWeb.KeyboardLive} id="keyboard" />
+    <.live_component
+      module={ElixirWordleWeb.KeyboardLive}
+      id="keyboard"
+      word_max_length={@length}
+      attempts={@attempts}
+    />
     """
-  end
-
-  def wordle_result_to_color_tailwind(atom) do
-    case atom do
-      :match -> "bg-purple border-dark_purple "
-      :letter_match -> "bg-lightest_purple border-light_purple"
-      :fail -> "bg-slate-100"
-      _ -> "bg-slate-50"
-    end
   end
 end
