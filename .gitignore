@@ -34,3 +34,6 @@ npm-debug.log
 
 # SVG images folder
 /priv/static/images/SVG
+
+#IDE
+.vscode
