@@ -1,4 +1,4 @@
-defmodule ElixirWordleWeb.KeyboardLive do
+defmodule ElixirWordleWeb.Keyboard do
   use ElixirWordleWeb, :live_component
 
   @moduledoc """

@@ -97,7 +97,7 @@ defmodule ElixirWordleWeb.WordleLive do
     </p>
 
     <.live_component
-      module={ElixirWordleWeb.KeyboardLive}
+      module={ElixirWordleWeb.Keyboard}
       id="keyboard"
       word_max_length={@length}
       attempts={@attempts}
