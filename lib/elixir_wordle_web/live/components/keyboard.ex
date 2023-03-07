@@ -8,7 +8,6 @@ defmodule ElixirWordleWeb.Keyboard do
   @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
-    <%!-- Throttle -> maybe too many requests --%>
     <div
       class={
         # width +1280px (ref: computer 1920)

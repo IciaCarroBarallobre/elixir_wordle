@@ -15,7 +15,7 @@ defmodule ElixirWordleWeb.WordleLive do
          |> assign(
            guesses: [],
            attempts: @max_attempts,
-           message: %{},
+           message: nil,
            length: length,
            clue: clue
          )}
@@ -28,7 +28,7 @@ defmodule ElixirWordleWeb.WordleLive do
          |> assign(
            guesses: [],
            attempts: 0,
-           message: %{error: error_msg},
+           message: error_msg,
            length: 0,
            clue: ""
          )}
@@ -38,10 +38,13 @@ defmodule ElixirWordleWeb.WordleLive do
   def handle_event("submit", %{"guess" => guess}, socket) do
     cond do
       socket.assigns.attempts == 0 ->
-        {:noreply, assign(socket, message: %{error: "No more attempts"})}
+        {:noreply, assign(socket, message: "No more attempts")}
 
       String.length(guess) < socket.assigns.length ->
-        {:noreply, assign(socket, message: %{error: "Not enough letters"})}
+        {:noreply, assign(socket, message: "Not enough letters")}
+
+      String.length(guess) > socket.assigns.length ->
+        {:noreply, assign(socket, message: "Too many letters")}
 
       true ->
         {response, info} = WordleServerMock.feedback(guess)
