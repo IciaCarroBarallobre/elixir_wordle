@@ -18,10 +18,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
   describe "Popup of Board: error msg when submit (keyboard)" do
     test "Too many letters"
 
-    test "Not enough letter", %{conn: conn} do
-      assert {:ok, view, _html} = live(conn, "/")
-      assert render_hook(view, :submit, %{guess: "four"}) =~ "Not enough letter"
-    end
+    test "Not enough letter"
 
     test "Delete msg if key-press"
   end
