@@ -1,10 +1,25 @@
 defmodule ElixirWordleWeb.WordleLiveTest do
+  import Phoenix.LiveViewTest
   use ExUnit.Case
-  use ElixirWordleWeb.ConnCase, async: true
+  use ElixirWordleWeb.ConnCase
+
+  describe "baseline" do
+    test "connected mount", %{conn: conn} do
+      assert {:ok, _view, html} = live(conn, "/")
+      assert html =~ "Elixir Wordle"
+    end
+
+    test "handled event", %{conn: conn} do
+      assert {:ok, view, _html} = live(conn, "/")
+      assert render_hook(view, :submit, %{guess: "state"}) =~ "state"
+    end
+  end
 
   describe "Popup of Board: error msg when submit (keyboard)" do
     test "Too many letters"
+
     test "Not enough letter"
+
     test "Delete msg if key-press"
   end
 
