@@ -49,7 +49,8 @@ defmodule ElixirWordle.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.11", only: [:dev, :test], runtime: false},
-      {:live_isolated_component, "~> 0.6.3", only: [:dev, :test]}
+      {:live_isolated_component, "~> 0.6.3", only: [:dev, :test]},
+      {:wallaby, "~> 0.30.0", runtime: false, only: :test}
     ]
   end
 
