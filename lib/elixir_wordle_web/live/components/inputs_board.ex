@@ -8,18 +8,23 @@ defmodule ElixirWordleWeb.InputsBoard do
   @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
-    <div id="inputs" class="mx-auto space-y-1 max-w-xs w-4/5">
+    <div id={@id} class="mx-auto space-y-1 max-w-xs w-4/5">
       <%= for i <- 1..(@attempts), @attempts > 0 do %>
         <div class={"grid #{grid_cols_tailwind(@columns)} gap-1 "}>
           <%= for j <- 1..@columns do %>
             <div
               class={
-            "  justify-content "
-            <> "text-gray-800 font-semibold text-xl uppercase text-center "
-            <> " rounded p-2 "
-            <> " border-2 border-slate-300  "
-            <> " min-h-[3rem] "
-            }
+                Enum.join(
+                  [
+                    "  justify-content ",
+                    "text-gray-800 font-semibold text-xl uppercase text-center ",
+                    " rounded p-2 ",
+                    " border-2 border-slate-300  ",
+                    " min-h-[3rem] "
+                  ],
+                  ""
+                )
+              }
               id={"input-#{i}-#{j}"}
             >
               <%= "\s" %>

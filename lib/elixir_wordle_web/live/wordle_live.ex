@@ -77,7 +77,7 @@ defmodule ElixirWordleWeb.WordleLive do
       Play a version of Wordle where <strong> all the words are related to Elixir</strong>.
     </p>
 
-    <.live_component module={ElixirWordleWeb.PopupOfBoard} id="popupofboard" message={@message} />
+    <.live_component module={ElixirWordleWeb.PopupOfBoard} id="warningMessage" message={@message} />
 
     <div id="board" class=" grid grid-cols-1 gap-y-1">
       <.live_component

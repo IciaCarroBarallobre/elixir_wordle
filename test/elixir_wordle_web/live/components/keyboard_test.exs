@@ -3,5 +3,4 @@ defmodule ElixirWordleWeb.KeyboardTest do
   use ElixirWordleWeb.ConnCase, async: true
 
   test "external keyboard event trigger on-screen keyboard"
-
 end

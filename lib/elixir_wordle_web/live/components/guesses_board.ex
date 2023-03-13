@@ -8,7 +8,7 @@ defmodule ElixirWordleWeb.GuessesBoard do
   @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
-    <div id="inputs_grid" class="mx-auto space-y-1 max-w-xs w-4/5">
+    <div id={@id} class="mx-auto space-y-1 max-w-xs w-4/5">
       <%= for {word, feedback} <- Enum.reverse(@guesses) do %>
         <div class={"grid #{grid_cols_tailwind(@columns)} gap-1 "} data-row={"#{word}"}>
           <%= for {letter, result} <- Enum.zip(word |> String.to_charlist(), feedback) do %>
