@@ -50,6 +50,7 @@ defmodule ElixirWordleWeb.Keyboard do
                 <> "py-3 rounded bg-slate-200 hover:bg-slate-400 active:bg-slate-300 focus:ring focus:outline-none "
                 <> "#{if key in ["Enter"], do: "col-span-2"}"
               }
+              id={"keyboard-#{key}"}
               type="button"
               data-key={key}
               x-ref={"key-#{key}"}

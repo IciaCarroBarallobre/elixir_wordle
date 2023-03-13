@@ -8,25 +8,38 @@ defmodule ElixirWordleWeb.InputsBoard do
   @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
-    <div id="inputs" class={"mx-auto grid grid-cols-#{@word_max_length} gap-1 max-w-xs w-4/5"}>
+    <div id="inputs" class="mx-auto space-y-1 max-w-xs w-4/5">
       <%= for i <- 1..(@attempts), @attempts > 0 do %>
-        <%= for j <- 1..@word_max_length do %>
-          <!-- bg-gray-200 bg-yellow-200 bg-green-200 -->
-          <div
-            class={
-          "  justify-content "
-          <> "text-gray-800 font-semibold text-xl uppercase text-center "
-          <> " rounded p-2 "
-          <> " border-2 border-slate-300  "
-          <> " min-h-[3rem]"
-          }
-            id={"input-#{i}-#{j}"}
-          >
-            <%= "\s" %>
-          </div>
-        <% end %>
+        <div class={"grid #{grid_cols_tailwind(@columns)} gap-1 "}>
+          <%= for j <- 1..@columns do %>
+            <div
+              class={
+            "  justify-content "
+            <> "text-gray-800 font-semibold text-xl uppercase text-center "
+            <> " rounded p-2 "
+            <> " border-2 border-slate-300  "
+            <> " min-h-[3rem] "
+            }
+              id={"input-#{i}-#{j}"}
+            >
+              <%= "\s" %>
+            </div>
+          <% end %>
+        </div>
       <% end %>
     </div>
     """
+  end
+
+  def grid_cols_tailwind(number) do
+    case number do
+      3 -> "grid-cols-3"
+      4 -> "grid-cols-4"
+      5 -> "grid-cols-5"
+      6 -> "grid-cols-6"
+      7 -> "grid-cols-7"
+      8 -> "grid-cols-8"
+      9 -> "grid-cols-9"
+    end
   end
 end

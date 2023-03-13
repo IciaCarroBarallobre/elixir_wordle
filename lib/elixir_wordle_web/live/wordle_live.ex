@@ -83,7 +83,7 @@ defmodule ElixirWordleWeb.WordleLive do
       <.live_component
         module={ElixirWordleWeb.GuessesBoard}
         id="guesses"
-        word_max_length={@length}
+        columns={@length}
         guesses={@guesses}
       />
 
@@ -91,7 +91,7 @@ defmodule ElixirWordleWeb.WordleLive do
         module={ElixirWordleWeb.InputsBoard}
         id="inputs"
         attempts={@attempts}
-        word_max_length={@length}
+        columns={@length}
       />
     </div>
 
