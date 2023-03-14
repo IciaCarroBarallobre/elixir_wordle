@@ -17,7 +17,7 @@ defmodule ElixirWordleWeb.GuessesBoard do
               Enum.join(
                 [
                   "justify-content",
-                  "text-gray-800 font-semibold text-xl uppercase text-center ",
+                  "font-semibold text-xl uppercase text-center ",
                   "rounded p-2 ",
                   " border-2 border-slate-300  ",
                   " min-h-[3rem] ",
@@ -49,9 +49,9 @@ defmodule ElixirWordleWeb.GuessesBoard do
 
   def wordle_result_to_color_tailwind(atom) do
     case atom do
-      :match -> "bg-purple border-dark_purple "
-      :letter_match -> "bg-lightest_purple border-light_purple"
-      :fail -> "bg-slate-100"
+      :match -> "bg-purple border-dark_purple text-white"
+      :letter_match -> "bg-lightest_purple border-light_purple text-gray-700"
+      :fail -> "bg-slate-100 text-gray-800"
       _ -> "bg-slate-50"
     end
   end
