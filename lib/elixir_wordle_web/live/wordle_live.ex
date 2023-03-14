@@ -1,10 +1,11 @@
 defmodule ElixirWordleWeb.WordleLive do
   use ElixirWordleWeb, :live_view
-  alias ElixirWordle.WordleServerMock, as: WordleServerMock
+
   @max_attempts 6
+  @wordle Application.compile_env(:elixir_wordle, :wordle, ElixirWordle.Wordle)
 
   def mount(_params, _session, socket) do
-    {response, info} = WordleServerMock.get_length_and_clue()
+    {response, info} = @wordle.get_length_and_clue()
 
     case response do
       :ok ->
@@ -47,7 +48,7 @@ defmodule ElixirWordleWeb.WordleLive do
         {:noreply, assign(socket, message: "Too many letters")}
 
       true ->
-        {response, info} = WordleServerMock.feedback(guess)
+        {response, info} = @wordle.feedback(guess)
 
         case response do
           :ok ->

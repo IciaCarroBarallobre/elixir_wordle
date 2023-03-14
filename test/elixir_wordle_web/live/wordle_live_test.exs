@@ -1,7 +1,12 @@
 defmodule ElixirWordleWeb.WordleLiveTest do
   import Phoenix.LiveViewTest
-  use ExUnit.Case
   use ElixirWordleWeb.ConnCase
+  use ExUnit.Case
+
+  # Import Mox && setup fixtures
+  import Mox
+
+  setup [:set_mox_private, :verify_on_exit!]
 
   describe "baseline" do
     test "connected mount", %{conn: conn} do
@@ -15,17 +20,35 @@ defmodule ElixirWordleWeb.WordleLiveTest do
     end
   end
 
-  describe "Popup of Board: error msg when submit (keyboard)" do
-    test "Too many letters"
+  describe "Popup of Board: error msg when submit" do
+    test "Not enough letters", %{conn: conn} do
+      answer_len = 5
+      guess = for _i <- 1..(answer_len - 1), do: "a", into: ""
 
-    test "Not enough letter"
+      Mox.stub(
+        ElixirWordle.Wordle,
+        :get_length_and_clue,
+        fn -> {:ok, %{length: answer_len, clue: ""}} end
+      )
 
-    test "Delete msg if key-press"
-  end
+      assert {:ok, view, _html} = live(conn, "/")
 
-  describe "Guesses & Inputs" do
-    test "Consistent number of attempts: with 0 guesses, we have the maximum number of entries left."
-    test "Consistent number of attempts: With maximum number of guesses, we have 0 entries left."
-    test "Consistent number of attempts: with n guesses .. inputs = attempts - n guesses"
+      assert render_hook(view, :submit, %{guess: guess}) =~ "Not enough letters"
+    end
+
+    test "Too many letter", %{conn: conn} do
+      answer_len = 5
+      guess = for _i <- 1..(answer_len + 1), do: "a", into: ""
+
+      Mox.stub(
+        ElixirWordle.Wordle,
+        :get_length_and_clue,
+        fn -> {:ok, %{length: answer_len, clue: ""}} end
+      )
+
+      assert {:ok, view, _html} = live(conn, "/")
+
+      assert render_hook(view, :submit, %{guess: guess}) =~ "Too many letters"
+    end
   end
 end

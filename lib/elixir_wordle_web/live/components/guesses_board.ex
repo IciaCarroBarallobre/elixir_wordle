@@ -35,15 +35,6 @@ defmodule ElixirWordleWeb.GuessesBoard do
     """
   end
 
-  def wordle_result_to_color_tailwind(atom) do
-    case atom do
-      :match -> "bg-purple border-dark_purple "
-      :letter_match -> "bg-lightest_purple border-light_purple"
-      :fail -> "bg-slate-100"
-      _ -> "bg-slate-50"
-    end
-  end
-
   def grid_cols_tailwind(number) do
     case number do
       3 -> "grid-cols-3"
@@ -53,6 +44,15 @@ defmodule ElixirWordleWeb.GuessesBoard do
       7 -> "grid-cols-7"
       8 -> "grid-cols-8"
       9 -> "grid-cols-9"
+    end
+  end
+
+  def wordle_result_to_color_tailwind(atom) do
+    case atom do
+      :match -> "bg-purple border-dark_purple "
+      :letter_match -> "bg-lightest_purple border-light_purple"
+      :fail -> "bg-slate-100"
+      _ -> "bg-slate-50"
     end
   end
 end
