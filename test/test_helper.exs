@@ -7,5 +7,5 @@ Application.put_env(:wallaby, :screenshot_dir, "docs/images/screenshots")
 Application.put_env(:wallaby, :base_url, ElixirWordleWeb.Endpoint.url())
 
 # Mock
-Mox.defmock(ElixirWordle.Wordle, for: ElixirWordle.WordleBehaviour)
+Mox.defmock(ElixirWordle.WordleMock, for: ElixirWordle.WordleBehaviour)
 Application.put_env(:elixir_wordle, :wordle, ElixirWordle.WordleMock)

@@ -28,19 +28,33 @@ defmodule ElixirWordle.Wordle do
          clue: "Mechanisms for working with textual representations"
        }}
 
+  @impl ElixirWordle.WordleBehaviour
+  def feedback(guess), do: feedback(guess, answer().answer)
+
   @doc """
-  Compare with a guess (2nd arg).
-  Returning a list where...
-  - Exact matches are represented as ``[:green]``.
-  - Occurrences are represented as ``[:yellow]`` (prioritizing first appearances).
-  - No matches are represented as ``[:gray]``.
+  Compare answer with a guess.
+  Returning a list which...
+  - Exact matches are represented as ``[:match]``.
+  - Occurrences are represented as ``[:letter_match]`` (prioritizing first appearances).
+  - No matches are represented as ``[:fail]``.
   Uppercase and lowercase do not matter at all.
   Return an ``error`` if answer and gray are not binary with same length.
-  """
 
-  @impl ElixirWordle.WordleBehaviour
-  def feedback(guess) when is_binary(guess) do
-    answer = answer().answer
+  ## Examples
+
+      iex> Wordle.feedback("green", "grnne")
+      {:ok, %{feedback: [:match, :match, :letter_match, :fail, :letter_match], guess: "green"}}
+
+      iex> Wordle.feedback("greed", "green")
+      {:ok, %{feedback: [:match, :match, :match, :match, :fail], guess: "greed"}}
+
+      iex> Wordle.feedback("greed", 1)
+      {:error, "Both arguments have to be strings."}
+
+      iex> Wordle.feedback("greed", "aaaaaaaaaaaaaaaaaa")
+      {:error, "Guess and answer must have the same number of letters."}
+  """
+  def feedback(guess, answer) when is_binary(guess) and is_binary(answer) do
     answer_list = answer |> String.downcase() |> String.to_charlist()
     guess_list = guess |> String.downcase() |> String.to_charlist()
 
@@ -57,7 +71,7 @@ defmodule ElixirWordle.Wordle do
     end
   end
 
-  def feedback(_answer, _guess) do
+  def feedback(_guess, _answer) do
     {:error, "Both arguments have to be strings."}
   end
 
@@ -73,12 +87,10 @@ defmodule ElixirWordle.Wordle do
         guess,
         {occurrences, []},
         fn guess_letter, {occurrences, result} ->
-          cond do
-            Enum.member?(occurrences, guess_letter) ->
-              {occurrences -- [guess_letter], [:letter_match | result]}
-
-            true ->
-              {occurrences, [guess_letter | result]}
+          if Enum.member?(occurrences, guess_letter) do
+            {occurrences -- [guess_letter], [:letter_match | result]}
+          else
+            {occurrences, [guess_letter | result]}
           end
         end
       )

@@ -6,7 +6,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
   # Import Mox && setup fixtures
   import Mox
 
-  setup [:set_mox_private, :verify_on_exit!]
+  setup [:verify_on_exit!]
 
   describe "baseline" do
     test "connected mount", %{conn: conn} do
@@ -26,7 +26,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       guess = for _i <- 1..(answer_len - 1), do: "a", into: ""
 
       Mox.stub(
-        ElixirWordle.Wordle,
+        ElixirWordle.WordleMock,
         :get_length_and_clue,
         fn -> {:ok, %{length: answer_len, clue: ""}} end
       )
@@ -41,7 +41,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       guess = for _i <- 1..(answer_len + 1), do: "a", into: ""
 
       Mox.stub(
-        ElixirWordle.Wordle,
+        ElixirWordle.WordleMock,
         :get_length_and_clue,
         fn -> {:ok, %{length: answer_len, clue: ""}} end
       )
