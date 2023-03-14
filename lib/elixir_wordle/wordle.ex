@@ -99,6 +99,6 @@ defmodule ElixirWordle.Wordle do
   end
 
   defp no_matches(guess) do
-    Enum.map(guess, fn x -> unless is_atom(x), do: :fail, else: x end)
+    Enum.map(guess, fn x -> if is_atom(x), do: x, else: :fail end)
   end
 end
