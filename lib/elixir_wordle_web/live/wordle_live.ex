@@ -5,70 +5,50 @@ defmodule ElixirWordleWeb.WordleLive do
   @wordle Application.compile_env(:elixir_wordle, :wordle, ElixirWordle.Wordle)
 
   def mount(_params, _session, socket) do
-    {response, info} = @wordle.get_length_and_clue()
-
-    case response do
-      :ok ->
-        %{length: length, clue: clue} = info
-
+    case @wordle.get_length_and_clue() do
+      {:ok, %{length: length, clue: clue}} ->
         {:ok,
          socket
-         |> assign(
-           guesses: [],
-           attempts: @max_attempts,
-           message: nil,
-           length: length,
-           clue: clue
-         )}
+         |> assign(guesses: [], attempts: @max_attempts, message: nil, length: length, clue: clue)}
 
-      :error ->
-        %{error: error_msg} = info
-
+      {:error, %{error: error_msg}} ->
         {:ok,
          socket
-         |> assign(
-           guesses: [],
-           attempts: 0,
-           message: error_msg,
-           length: 0,
-           clue: ""
-         )}
+         |> assign(guesses: [], attempts: 0, message: error_msg, length: 0, clue: "clue")}
     end
   end
 
-  def handle_event("submit", %{"guess" => guess}, socket) do
-    cond do
-      socket.assigns.attempts == 0 ->
-        {:noreply, assign(socket, message: "No more attempts")}
+  def handle_event("submit", %{"guess" => _guess}, %{assigns: %{attempts: 0}} = socket) do
+    {:noreply, assign(socket, message: "No more attempts")}
+  end
 
-      String.length(guess) < socket.assigns.length ->
-        {:noreply, assign(socket, message: "Not enough letters")}
+  def handle_event("submit", %{"guess" => guess}, %{assigns: %{length: answer_length}} = socket)
+      when answer_length < byte_size(guess) do
+    {:noreply, assign(socket, message: "Too many letters")}
+  end
 
-      String.length(guess) > socket.assigns.length ->
-        {:noreply, assign(socket, message: "Too many letters")}
+  def handle_event("submit", %{"guess" => guess}, %{assigns: %{length: answer_length}} = socket)
+      when answer_length > byte_size(guess) do
+    {:noreply, assign(socket, message: "Not enough letters")}
+  end
 
-      true ->
-        {response, info} = @wordle.feedback(guess)
+  def handle_event(
+        "submit",
+        %{"guess" => guess},
+        %{assigns: %{attempts: attempts, guesses: guesses}} = socket
+      ) do
+    case @wordle.feedback(guess) do
+      {:ok, %{guess: guess, feedback: feedback}} ->
+        attempts = attempts - 1
+        {
+          :noreply,
+          socket
+          |> assign(guesses: [{guess, feedback} | guesses], attempts: attempts)
+          |> push_event("new_attempt", %{attempts: attempts})
+        }
 
-        case response do
-          :ok ->
-            %{guess: guess, feedback: feedback} = info
-            number_of_attempts = socket.assigns.attempts - 1
-
-            {
-              :noreply,
-              socket
-              |> assign(
-                guesses: [{guess, feedback} | socket.assigns.guesses],
-                attempts: number_of_attempts
-              )
-              |> push_event("new_attempt", %{attempts: number_of_attempts})
-            }
-
-          :error ->
-            %{error: error_msg} = info
-            {:noreply, socket |> assign(message: %{error: error_msg})}
-        end
+      {:error, %{error: error_msg}} ->
+        {:noreply, socket |> assign(message: %{error: error_msg})}
     end
   end
 
