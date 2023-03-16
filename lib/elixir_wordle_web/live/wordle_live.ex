@@ -40,6 +40,7 @@ defmodule ElixirWordleWeb.WordleLive do
     case @wordle.feedback(guess) do
       {:ok, %{guess: guess, feedback: feedback}} ->
         attempts = attempts - 1
+
         {
           :noreply,
           socket
