@@ -11,7 +11,7 @@ defmodule ElixirWordleWeb.WordleLive do
          socket
          |> assign(guesses: [], attempts: @max_attempts, message: nil, length: length, clue: clue)}
 
-      {:error, %{error: error_msg}} ->
+      {:error, error_msg} ->
         {:ok,
          socket
          |> assign(guesses: [], attempts: 0, message: error_msg, length: 0, clue: "clue")}
