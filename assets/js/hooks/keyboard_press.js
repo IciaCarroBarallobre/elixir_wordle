@@ -20,15 +20,14 @@ export default {
   keyAction(key, length) {
 
     let el = document.getElementById("warningMessage");
-    el.classList.remove("block");
-    el.classList.add("hidden");
+    if (el.classList.contains("block")) el.classList.replace("block", "hidden");
+
 
     switch (key) {
       case 'Enter':
         if (this.guess.length != length) {
           el.innerHTML = "Not enough letters";
-          el.classList.remove("hidden");
-          el.classList.add("block");
+          el.classList.replace("hidden", "block");
         } else {
           this.pushEvent("submit", { guess: this.guess });
         }
@@ -38,7 +37,7 @@ export default {
         this.guess = this.guess.slice(0, -1);
         if (this.current_tile > 1) {
           this.current_tile = this.current_tile - 1;
-          let el = document.getElementById("input-1-"+this.current_tile);
+          let el = document.getElementById("input-1-" + this.current_tile);
           el.classList.remove("border-light_purple");
           el.classList.add("border-slate-300");
           el.innerHTML = " ";
@@ -52,7 +51,7 @@ export default {
           if (this.guess.length < length) {
             this.guess = this.guess + key;
 
-            let el = document.getElementById("input-1-"+this.current_tile);
+            let el = document.getElementById("input-1-" + this.current_tile);
             el.classList.remove("border-slate-300");
             el.classList.add("border-light_purple");
             el.innerHTML = key;
