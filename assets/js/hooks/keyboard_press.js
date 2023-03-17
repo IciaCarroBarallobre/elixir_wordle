@@ -9,6 +9,7 @@ export default {
         this.keyAction(event.detail.key, event.detail.length)
       }
     });
+
     this.handleEvent("new_attempt", data => {
       this.guess = "";
       this.attempts = data.attempts;
@@ -21,7 +22,6 @@ export default {
 
     let el = document.getElementById("warningMessage");
     if (el.classList.contains("block")) el.classList.replace("block", "hidden");
-
 
     switch (key) {
       case 'Enter':
@@ -38,8 +38,7 @@ export default {
         if (this.current_tile > 1) {
           this.current_tile = this.current_tile - 1;
           let el = document.getElementById("input-1-" + this.current_tile);
-          el.classList.remove("border-light_purple");
-          el.classList.add("border-slate-300");
+          el.classList.replace("border-light_purple", "border-slate-300");
           el.innerHTML = " ";
 
         }
@@ -52,17 +51,15 @@ export default {
             this.guess = this.guess + key;
 
             let el = document.getElementById("input-1-" + this.current_tile);
-            el.classList.remove("border-slate-300");
-            el.classList.add("border-light_purple");
+            el.classList.replace("border-slate-300", "border-light_purple");
             el.innerHTML = key;
-            
+
             this.current_tile = this.current_tile + 1;
           }
         }
         break;
     }
 
-    console.log("guess ", this.guess);
   },
 
 };
