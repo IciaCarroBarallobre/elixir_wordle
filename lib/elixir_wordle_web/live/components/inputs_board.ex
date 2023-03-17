@@ -13,18 +13,9 @@ defmodule ElixirWordleWeb.InputsBoard do
         <div class={"grid #{grid_cols_tailwind(@columns)} gap-1 "}>
           <%= for j <- 1..@columns do %>
             <div
-              class={
-                Enum.join(
-                  [
-                    "  justify-content ",
-                    "text-gray-800 font-semibold text-xl uppercase text-center ",
-                    " rounded p-2 ",
-                    " border-2 border-slate-300  ",
-                    " min-h-[3rem] "
-                  ],
-                  ""
-                )
-              }
+              class="  justify-content
+                    text-gray-800 font-semibold text-xl uppercase text-center
+                     rounded p-2 border-2 border-slate-300 min-h-[3rem] "
               id={"input-#{i}-#{j}"}
             >
               <%= "\s" %>

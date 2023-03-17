@@ -14,17 +14,11 @@ defmodule ElixirWordleWeb.GuessesBoard do
           <%= for {letter, result} <- Enum.zip(word |> String.to_charlist(), feedback) do %>
             <!-- bg-gray-200 bg-yellow-200 bg-green-200 -->
             <div class={
-              Enum.join(
-                [
-                  "justify-content",
-                  "font-semibold text-xl uppercase text-center ",
-                  "rounded p-2 ",
-                  " border-2 border-slate-300  ",
-                  " min-h-[3rem] ",
-                  wordle_result_to_color_tailwind(result)
-                ],
-                " "
-              )
+              " justify-content
+                font-semibold text-xl uppercase text-center
+                rounded p-2 border-2 border-slate-300 min-h-[3rem]
+                #{wordle_result_to_color_tailwind(result)}
+                "
             }>
               <%= " #{to_string([letter])} " %>
             </div>

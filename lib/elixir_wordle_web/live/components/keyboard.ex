@@ -9,16 +9,7 @@ defmodule ElixirWordleWeb.Keyboard do
   def render(assigns) do
     ~H"""
     <div
-      class={
-        Enum.join(
-          [
-            " xl:w-2/3 ",
-            "md:w-4/5 ",
-            " mx-auto w-full px-2 mb-5 "
-          ],
-          " "
-        )
-      }
+      class=" xl:w-2/3 md:w-4/5 mx-auto w-full px-2 mb-5 "
       aria-label="Keyboard"
       x-data="{
         keyValue: '',
@@ -42,25 +33,16 @@ defmodule ElixirWordleWeb.Keyboard do
         do %>
         <!-- grid-cols-9 grid-cols-10 -->
         <div class={
-          Enum.join(
-            [
-              "mb-1",
-              "grid grid-cols-#{length(keyboard_line) + span} gap-1 grid-auto"
-            ],
-            " "
-          )
+              "mb-1
+              grid grid-cols-#{length(keyboard_line) + span} gap-1 grid-auto"
         }>
           <%= for key <- keyboard_line do %>
             <button
               class={
-                Enum.join(
-                  [
-                    " text-gray-800 font-semibold sm:text-lg uppercase text-center ",
-                    "py-3 rounded bg-slate-200 hover:bg-slate-400 active:bg-slate-300 focus:ring focus:outline-none ",
-                    "#{if key in ["Enter"], do: "col-span-2"}"
-                  ],
-                  " "
-                )
+
+                    " text-gray-800 font-semibold sm:text-lg uppercase text-center
+                    py-3 rounded bg-slate-200 hover:bg-slate-400 active:bg-slate-300 focus:ring focus:outline-none
+                    #{if key in ["Enter"], do: "col-span-2"}"
               }
               id={"keyboard-#{key}"}
               type="button"
