@@ -1,4 +1,7 @@
 defmodule ElixirWordle.Wordle do
+
+  @behaviour ElixirWordle.WordleAPI
+
   @moduledoc """
   Wordle Module can check how many exact matches, same position and letter,
   occurrences, same letter, or no matches are between a word (``answer``)
@@ -10,7 +13,17 @@ defmodule ElixirWordle.Wordle do
   Both words have to contains same length and use only UTF-8 characters.
   """
 
-  @behaviour ElixirWordle.WordleBehaviour
+  @impl ElixirWordle.WordleAPI
+  def get_length_and_clue(),
+    do:
+      {:ok,
+       %{
+         length: String.length(answer().answer),
+         clue: answer().clue
+       }}
+
+  @impl ElixirWordle.WordleAPI
+  def feedback(guess), do: feedback(guess, answer().answer)
 
   defp answer() do
     %{
@@ -18,18 +31,6 @@ defmodule ElixirWordle.Wordle do
       clue: "Mechanisms for working with textual representations"
     }
   end
-
-  @impl ElixirWordle.WordleBehaviour
-  def get_length_and_clue(),
-    do:
-      {:ok,
-       %{
-         length: String.length(answer().answer),
-         clue: "Mechanisms for working with textual representations"
-       }}
-
-  @impl ElixirWordle.WordleBehaviour
-  def feedback(guess), do: feedback(guess, answer().answer)
 
   @doc """
   Compare answer with a guess.
@@ -74,6 +75,8 @@ defmodule ElixirWordle.Wordle do
   def feedback(_guess, _answer) do
     {:error, "Both arguments have to be strings."}
   end
+
+
 
   defp check_matches(guess, answer) do
     for {g, a} <- Enum.zip(guess, answer), do: if(g == a, do: :match, else: g)

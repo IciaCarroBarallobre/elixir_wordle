@@ -7,7 +7,7 @@ defmodule ElixirWordleWeb.PopupOfBoardTest do
 
   alias ElixirWordleWeb.PopupOfBoard
 
-  describe "isolated popup behaviour" do
+  describe "isolated PopupOfBoard behaviour" do
     test "If the message is nil, PopupOfBoard shouldn't show the popup" do
       {:ok, _view, html} = live_isolated_component(PopupOfBoard, assigns: %{message: nil})
       assert html =~ "hidden"

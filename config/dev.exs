@@ -65,3 +65,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Behaviour for Wordle
+config :elixir_wordle, :wordle_api, ElixirWordle.Wordle

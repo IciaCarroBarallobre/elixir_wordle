@@ -35,7 +35,7 @@ defmodule ElixirWordleWeb.InputsBoard do
       6 -> "grid-cols-6"
       7 -> "grid-cols-7"
       8 -> "grid-cols-8"
-      9 -> "grid-cols-9"
+      _ -> ""
     end
   end
 end

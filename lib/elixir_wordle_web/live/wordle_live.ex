@@ -1,25 +1,33 @@
 defmodule ElixirWordleWeb.WordleLive do
   use ElixirWordleWeb, :live_view
+  import ElixirWordleWeb.ErrorComponents
 
   @max_attempts 6
-  @wordle Application.compile_env(:elixir_wordle, :wordle, ElixirWordle.Wordle)
+  @wordle Application.compile_env(:elixir_wordle, :wordle_api, ElixirWordle.Wordle)
 
   def mount(_params, _session, socket) do
-    case @wordle.get_length_and_clue() do
-      {:ok, %{length: length, clue: clue}} ->
-        {:ok,
-         socket
-         |> assign(guesses: [], attempts: @max_attempts, message: nil, length: length, clue: clue)}
+    socket =
+      socket
+      |> assign(guesses: [], attempts: @max_attempts, message: nil)
 
-      {:error, error_msg} ->
+    case @wordle.get_length_and_clue() do
+      {:ok, %{length: length, clue: clue}} when length > 2 and length < 9 ->
+        {:ok, socket |> assign(length: length, clue: clue)}
+
+      _ ->
         {:ok,
          socket
-         |> assign(guesses: [], attempts: 0, message: error_msg, length: 0, clue: "clue")}
+         |> assign(
+           length: 0,
+           image_error: "Word not available",
+           clue: "Today's word is not available",
+           attempts: 0
+         )}
     end
   end
 
   def handle_event("submit", %{"guess" => _guess}, %{assigns: %{attempts: 0}} = socket) do
-    {:noreply, assign(socket, message: "No more attempts")}
+    {:noreply, assign(socket, message: "There aren't more attempts")}
   end
 
   def handle_event("submit", %{"guess" => guess}, %{assigns: %{length: answer_length}} = socket)
@@ -76,6 +84,12 @@ defmodule ElixirWordleWeb.WordleLive do
         columns={@length}
       />
     </div>
+
+    <%= if(@length == 0) do %>
+    <div class="mx-auto space-y-1 max-w-xs w-4/5">
+      <.image_error text={@image_error} />
+    </div>
+    <% end %>
 
     <p class="adjust-content mx-auto text-center my-6">
       Clue: <strong><%= @clue %></strong>.

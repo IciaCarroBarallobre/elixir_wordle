@@ -17,3 +17,6 @@ config :phoenix, :plug_init_mode, :runtime
 config :wallaby,
   driver: Wallaby.Chrome,
   screenshot_dir: "docs/images/screenshots"
+
+# Behaviour for Wordle
+config :elixir_wordle, :wordle_api, ElixirWordle.MockWordleAPI
