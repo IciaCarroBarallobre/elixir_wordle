@@ -1,11 +1,11 @@
 export default {
   mounted() {
     this.guess = ""
-    this.attempts = 6
+    this.attempts = true
     this.current_tile = 1
 
     this.el.addEventListener('key-press', (event) => {
-      if (this.attempts > 0) {
+      if (this.attempts) {
         this.keyAction(event.detail.key, event.detail.length)
       }
     });
@@ -14,7 +14,6 @@ export default {
       this.guess = "";
       this.attempts = data.attempts;
       this.current_tile = 1;
-
     });
   },
 

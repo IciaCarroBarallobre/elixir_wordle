@@ -47,14 +47,23 @@ defmodule ElixirWordleWeb.WordleLive do
       ) do
     case @wordle.feedback(guess) do
       {:ok, %{guess: guess, feedback: feedback}} ->
-        attempts = attempts - 1
-
-        {
-          :noreply,
-          socket
-          |> assign(guesses: [{guess, feedback} | guesses], attempts: attempts)
-          |> push_event("new_attempt", %{attempts: attempts})
-        }
+        (Enum.all?(feedback, fn x -> x == :match end) &&
+           {
+             :noreply,
+             socket
+             |> assign(
+               guesses: [{guess, feedback} | guesses],
+               attempts: 0,
+               message: "You got it!"
+             )
+             |> push_event("new_attempt", %{attempts: false})
+           }) ||
+          {
+            :noreply,
+            socket
+            |> assign(guesses: [{guess, feedback} | guesses], attempts: attempts - 1)
+            |> push_event("new_attempt", %{attempts: true})
+          }
 
       {:error, %{error: error_msg}} ->
         {:noreply, socket |> assign(message: %{error: error_msg})}
