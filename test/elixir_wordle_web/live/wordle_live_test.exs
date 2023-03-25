@@ -51,7 +51,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
         :feedback,
         1,
         fn guess ->
-          {:ok, %{guess: guess, feedback: (for _i <- 1..String.length(guess), do: :letter_match) }}
+          {:ok, %{guess: guess, feedback: for(_i <- 1..String.length(guess), do: :letter_match)}}
         end
       )
 

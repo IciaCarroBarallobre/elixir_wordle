@@ -6,7 +6,7 @@ defmodule ElixirWordle.MixProject do
       app: :elixir_wordle,
       version: "0.1.0",
       elixir: "~> 1.14",
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -25,7 +25,7 @@ defmodule ElixirWordle.MixProject do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["test/support", "lib"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #

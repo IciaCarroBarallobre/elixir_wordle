@@ -1,5 +1,4 @@
 defmodule ElixirWordle.Wordle do
-
   @behaviour ElixirWordle.WordleAPI
 
   @moduledoc """
@@ -75,8 +74,6 @@ defmodule ElixirWordle.Wordle do
   def feedback(_guess, _answer) do
     {:error, "Both arguments have to be strings."}
   end
-
-
 
   defp check_matches(guess, answer) do
     for {g, a} <- Enum.zip(guess, answer), do: if(g == a, do: :match, else: g)

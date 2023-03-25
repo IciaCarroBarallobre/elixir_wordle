@@ -86,9 +86,9 @@ defmodule ElixirWordleWeb.WordleLive do
     </div>
 
     <%= if(@length == 0) do %>
-    <div class="mx-auto space-y-1 max-w-xs w-4/5">
-      <.image_error text={@image_error} />
-    </div>
+      <div class="mx-auto space-y-1 max-w-xs w-4/5">
+        <.image_error text={@image_error} />
+      </div>
     <% end %>
 
     <p class="adjust-content mx-auto text-center my-6">
