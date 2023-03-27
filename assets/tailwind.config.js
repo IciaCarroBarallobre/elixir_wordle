@@ -26,6 +26,15 @@ module.exports = {
         purple: "#AC82C1",
         light_purple: "#CCB2D9",
         lightest_purple: "#EFE0F7"
+      },
+      keyframes: {
+        'flicker': {
+          '0%, 31.98%, 32.82%, 34.98%, 35.72%, 36.98%, 37.62%,  67.98%, 68.42%, 95.98%, 96.72%, 98.98%, 99.62%, 100%': { opacity: 1 },
+          '32%, 32.8%, 35%, 35.7%, 37%, 37.6%, 68%, 68.4%, 96%, 96.7%, 99%, 99.6%': { opacity: 0 }
+        }
+      },
+      animation: {
+        'flicker': 'flicker 2s linear infinite both',
       }
     },
   },

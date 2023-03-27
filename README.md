@@ -18,6 +18,18 @@
 
 Players have **six attempts to guess the word**, and if they correctly guess a valid Elixir-related word of the correct length, feedback is provided.
 
+Example where **incorrect letters** are displayed in **gray** (⬜), **correct letters** in **yellow** (🟨), and **correctly placed letters** in **green** (🟩):
+
+```bash
+CLUE: "Datatype"
+
+⬜⬜⬜⬜⬜ length(word) => 5 
+⬜🟨⬜⬜🟨 Trying... 'FLOAT' => Now you know that contains 'L' and 'T'.
+🟨⬜⬜🟨⬜ Trying... 'LISTS'
+🟩⬜⬜🟨⬜ Trying... 'TREES' => Now you know the word starts with 'T'.
+🟩🟩🟩🟩🟩 Trying... 'TUPLE' => You got it!
+```
+
 ## Running the game
 
 To start your Phoenix server:
