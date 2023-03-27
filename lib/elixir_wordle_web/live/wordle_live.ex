@@ -52,7 +52,7 @@ defmodule ElixirWordleWeb.WordleLive do
              :noreply,
              socket
              |> assign(
-               guesses: [{guess, feedback} | guesses],
+               guesses: fill_guesses([{guess, feedback} | guesses], attempts - 1),
                attempts: 0,
                message: "You got it!"
              )
@@ -111,5 +111,14 @@ defmodule ElixirWordleWeb.WordleLive do
       attempts={@attempts}
     />
     """
+  end
+
+  defp fill_guesses(guesses, 0) do
+    guesses
+  end
+
+  defp fill_guesses([{guess, _feedback} | _t] = guesses, attempts) when attempts > 0 do
+    word = for _i <- 1..String.length(guess), do: " ", into: ""
+    fill_guesses([{word, nil} | guesses], attempts - 1)
   end
 end

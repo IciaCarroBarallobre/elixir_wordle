@@ -11,7 +11,10 @@ defmodule ElixirWordleWeb.GuessesBoard do
     <div id={@id} class="mx-auto space-y-1 max-w-xs w-4/5">
       <%= for {word, feedback} <- Enum.reverse(@guesses) do %>
         <div class={"grid #{grid_cols_tailwind(@columns)} gap-1 "} data-row={"#{word}"}>
-          <%= for {letter, result} <- Enum.zip(word |> String.to_charlist(), feedback) do %>
+          <%= for {letter, result} <- Enum.zip(
+            word |> String.to_charlist(),
+            (feedback || fill_feedback(word, feedback))
+            ) do %>
             <!-- bg-gray-200 bg-yellow-200 bg-green-200 -->
             <div class={
               " justify-content
@@ -46,7 +49,10 @@ defmodule ElixirWordleWeb.GuessesBoard do
       :match -> "bg-purple border-dark_purple text-white"
       :letter_match -> "bg-lightest_purple border-light_purple text-gray-700"
       :fail -> "bg-slate-100 text-gray-800"
-      _ -> "bg-slate-50"
+      _ -> "bg-slate-100"
     end
   end
+
+  defp fill_feedback(word, feedback) when is_nil(feedback),
+    do: for(_i <- 1..String.length(word), do: :none)
 end
