@@ -12,6 +12,13 @@ defmodule ElixirWordle.Wordle do
   Both words have to contains same length and use only UTF-8 characters.
   """
 
+  defp answer() do
+    %{
+      answer: "sigil",
+      clue: "Mechanisms for working with textual representations"
+    }
+  end
+
   @impl ElixirWordle.WordleAPI
   def get_length_and_clue(),
     do:
@@ -23,13 +30,6 @@ defmodule ElixirWordle.Wordle do
 
   @impl ElixirWordle.WordleAPI
   def feedback(guess), do: feedback(guess, answer().answer)
-
-  defp answer() do
-    %{
-      answer: "sigil",
-      clue: "Mechanisms for working with textual representations"
-    }
-  end
 
   @doc """
   Compare answer with a guess.

@@ -19,24 +19,28 @@ Main flow of the page:
 
 Main sequence of the page, including layers interation (browser, endpoints, ..., db): TODO
 
-![Sequence Diagram]("/docs/images/diagrams/sequence_diagram.png")
+![Sequence Diagram](/docs/images/diagrams/sequence_diagram.png)
 
 ## Mockups
 
 | <img width="500px" alt="Mockup of wordle page" src="/docs/images/mockups/page1.png" /> | <img width="430px" alt="Mockup of end game page" src="/docs/images/mockups/page2.png" /> |
 | -- | -- |
 
+Initially, for the first functional version where there is no backend to search for words, the second page is not necessary. Language will be a lower priority along with color-blind mode, accept only valid words and dark theme.
+
 ### Frontend Screenshots  (responsive)
 
-Table displaying wallaby screenshots with responsive widths:
+Table displaying wallaby screenshots with 640px width:
 
-| width = 640px <img width="500px" alt="Screenshot of wordle page width = 640px" src="/docs/images/screenshots/screenshot-w-640.png" /> | width = 768px <img width="500px" alt="Screenshot of wordle page width = 768px" src="/docs/images/screenshots/screenshot-w-768.png" /> |
+| <img width="500px" alt="Screenshot of wordle page 640px width when word is available" src="/docs/images/screenshots/screenshot-w-640.png" /> |  <img width="500px" alt="Screenshot of wordle page when word is not available" src="/docs/images/screenshots/screenshot-w-unavailable-word-640.png" /> |
 | -- | -- |
-| width = 1024px  <img width="500px" alt="Screenshot of wordle page width = 1024px" src="/docs/images/screenshots/screenshot-w-1024.png" /> |  |
+| <img width="500px" alt="Screenshot of wordle page 640px width when rules are displayed" src="/docs/images/screenshots/screenshot-w-instructions-640.png" /> |  |
+
+To examine additional widths, please refer to the [screenshots folder](./images/screenshots/).
 
 [Wallaby](https://github.com/elixir-wallaby/wallaby) is used for end-to-end testing and for taking these screenshots (with Chrome drivers).
 
-To generate it:
+To produce the screenshots and evaluate client-server cross-functional behaviors comprehensively:
 
 ```elixir
 mix test --only wallaby

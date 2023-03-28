@@ -35,7 +35,7 @@ defmodule ElixirWordleWeb.ErrorComponents do
             y="-30"
             transform="translate(-43.716995,149.77458)"
           >
-            <tspan x="220" y="-25">
+            <tspan x="220" y="-10">
               <%= @text %>
             </tspan>
           </text>

@@ -73,10 +73,11 @@ defmodule ElixirWordleWeb.WordleLive do
   def render(assigns) do
     ~H"""
     <button
+      id="button-wordle-rules"
       phx-click={show_modal("wordle-rules")}
-      class="mx-auto rounded-md right-0 top-3 z-40  mt-2 sm:mt-1 fixed bg-slate-100 mr-4 sm:mr-8 border border-gray-200"
+      class="mx-auto rounded-md right-0 top-2 sm:top-3 z-40 mt-2 sm:mt-1 fixed bg-slate-200 mr-4 sm:mr-8 border border-gray-200"
     >
-      <Heroicons.question_mark_circle class=" h-5 w-5 md:w-8 md:h-8  text-gray-500" />
+      <Heroicons.question_mark_circle class=" h-5 w-5 md:w-8 md:h-8  text-gray-600" />
     </button>
 
     <%= modal_rules(assigns) %>
@@ -87,25 +88,25 @@ defmodule ElixirWordleWeb.WordleLive do
 
     <.live_component module={ElixirWordleWeb.PopupOfBoard} id="warningMessage" message={@message} />
 
-    <div id="board" class=" grid grid-cols-1 gap-y-1">
-      <.live_component
-        module={ElixirWordleWeb.GuessesBoard}
-        id="guesses"
-        columns={@length}
-        guesses={@guesses}
-      />
-
-      <.live_component
-        module={ElixirWordleWeb.InputsBoard}
-        id="inputs"
-        attempts={@attempts}
-        columns={@length}
-      />
-    </div>
-
     <%= if(@length == 0) do %>
       <div class="mx-auto space-y-1 max-w-xs w-4/5">
         <.image_error text={@image_error} />
+      </div>
+    <% else %>
+      <div id="board" class=" grid grid-cols-1 gap-y-1">
+        <.live_component
+          module={ElixirWordleWeb.GuessesBoard}
+          id="guesses"
+          columns={@length}
+          guesses={@guesses}
+        />
+
+        <.live_component
+          module={ElixirWordleWeb.InputsBoard}
+          id="inputs"
+          attempts={@attempts}
+          columns={@length}
+        />
       </div>
     <% end %>
 
