@@ -1,17 +1,12 @@
 <header class=" sticky top-0 right-0 z-30 w-full bg-white shadow-xlmb-40 border-b-2
       text-center font-bold  text-3xl  text-darkest_purple  md:text-4xl
-      py-2 sm:py-4
-      px-2 sm:px-6 lg:px-8 ">
-  <div class="inline-flex mx-auto">
+      py-2 md:py-4
+      px-2 md:px-6 lg:px-8 ">
+  <div class="inline-flex self-start">
     <div class="inline-flex ">
-      <img src={~p"/images/icon/favicon-512x512.png"} class="h-9" alt="Icon" /> Elixir Wordle
+      <img src={~p"/images/icon/favicon-512x512.png"} class="h-8 sm:h-9" alt="Icon" />
+      Elixir Wordle
     </div>
-    <button
-      phx-click={show_modal("wordle-rules")}
-      class="mx-auto rounded-md right-0 mt-2 sm:mt-1 fixed bg-slate-100 mr-4 sm:mr-8 "
-    >
-      <Heroicons.question_mark_circle class=" h-6 w-6 md:w-9 md:h-9  text-gray-800" />
-    </button>
   </div>
 </header>
 <main class="px-4 py-2 sm:px-6 lg:px-8">
@@ -30,38 +25,6 @@
       Attempting to reconnect <Heroicons.arrow_path class="ml-1 w-3 h-3 inline animate-spin" />
     </.flash>
 
-    <.modal id="wordle-rules">
-      <:title>
-        <span class="text-center font-bold text-2xl  text-darkest_purple"> How to play </span>
-      </:title>
-
-      <div class="mt-2 text-sm leading-6 text-zinc-600">
-        <span>
-          In Elixir Wordle, players try to guess an Elixir-related word in a maximun of 6 tries.
-        </span>
-        <br /><br /> To start the game, enter any word: <br /><br />
-        <.live_component
-          module={ElixirWordleWeb.GuessesBoard}
-          id="example-guesses"
-          columns={6}
-          guesses={[{"erlang", [:match, :letter_match, :letter_match, :fail, :fail, :fail]}]}
-        />
-        <br />
-        <ul class=" rounded bg-slate-50">
-          <li>
-            <span class="font-bold"> A </span>, <span class="font-bold"> N </span>,
-            <span class="font-bold"> G </span>
-            aren't in the word at all.
-          </li>
-          <li>
-            <span class="font-bold"> R </span>, <span class="font-bold"> R </span>
-            is in the word but in the wrong tile.
-          </li>
-          <li><span class="font-bold"> E </span> is in the word and in the correct tile.</li>
-        </ul>
-        <br /> So, next try could be <span class="text-darkest_purple font-bold">ELIXIR</span>.
-      </div>
-    </.modal>
     <%= @inner_content %>
   </div>
 </main>
