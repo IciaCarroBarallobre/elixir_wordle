@@ -5,9 +5,9 @@ defmodule ElixirWordle.Wordle do
   Wordle Module can check how many exact matches, same position and letter,
   occurrences, same letter, or no matches are between a word (``answer``)
   and another word (``guess``). Uppercase and lowercase do not matter at all.
-  - Exact matches => ``:green``
-  - Matches/Occurrences => ``:yellow``
-  - No matches => ``:gray``
+  - Exact matches => ``:match``
+  - Matches/Occurrences => ``:letter_match``
+  - No matches => ``:fail``
   Prioritizing exact matches, and then, prioritizing first appearances.
   Both words have to contains same length and use only UTF-8 characters.
   """
@@ -15,21 +15,26 @@ defmodule ElixirWordle.Wordle do
   defp answer() do
     %{
       answer: "sigil",
-      clue: "Mechanisms for working with textual representations"
+      clue: "Mechanisms for working with textual representations",
+      description:
+        "Sigils start with the tilde (~) character which is followed by a letter and then a delimiter.
+       Common sigils: ~r regex expressions, ~c charlist, ~s strings, ~w  lists of words,
+       ~D date, ~T time etc."
     }
   end
 
   @impl ElixirWordle.WordleAPI
-  def get_length_and_clue(),
+  def get_word_info(),
     do:
       {:ok,
        %{
-         length: String.length(answer().answer),
-         clue: answer().clue
+         answer: answer().answer,
+         clue: answer().clue,
+         description: answer().description
        }}
 
   @impl ElixirWordle.WordleAPI
-  def feedback(guess), do: feedback(guess, answer().answer)
+  def feedback(guess, answer)
 
   @doc """
   Compare answer with a guess.

@@ -12,8 +12,10 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
   @tag :wallaby
   feature "wallaby screenshot when answer has a supported length", %{session: session} do
+    mock_data = %{answer: "elixir", clue: "This is the clue", description: ""}
+
     ElixirWordle.MockWordleAPI
-    |> expect(:get_length_and_clue, 2, fn -> {:ok, %{length: 5, clue: "This is the clue"}} end)
+    |> expect(:get_word_info, 2, fn -> {:ok, mock_data} end)
 
     home = session |> visit("/")
 
@@ -26,7 +28,7 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
   @tag :wallaby
   feature "wallaby screenshot when answer is unavailable", %{session: session} do
     ElixirWordle.MockWordleAPI
-    |> expect(:get_length_and_clue, 2, fn -> {:error, "Not available"} end)
+    |> expect(:get_word_info, 2, fn -> {:error, "Not available"} end)
 
     home = session |> visit("/")
 
@@ -41,8 +43,10 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
   @tag :wallaby
   feature "wallaby screenshot for instructions", %{session: session} do
+    mock_data = %{answer: "elixir", clue: "This is the clue", description: ""}
+
     ElixirWordle.MockWordleAPI
-    |> expect(:get_length_and_clue, 2, fn -> {:ok, %{length: 5, clue: ""}} end)
+    |> expect(:get_word_info, 2, fn -> {:ok, mock_data} end)
 
     home =
       session

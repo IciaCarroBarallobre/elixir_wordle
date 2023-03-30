@@ -5,10 +5,11 @@ defmodule ElixirWordleWeb.ErrorComponents do
   use Phoenix.Component
 
   attr(:text, :string, default: "")
+  attr(:id, :string, default: nil)
 
   def image_error(assigns) do
     ~H"""
-    <svg width="255" height="212" viewBox="0 0 255 212" class="mx-auto w-fit">
+    <svg width="255" height="212" viewBox="0 0 255 212" class="mx-auto w-fit" id={@id}>
       <g fill="none" fill-rule="evenodd" transform="translate(-167.95728,-64.975157)">
         <g>
           <path

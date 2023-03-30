@@ -8,21 +8,30 @@ defmodule ElixirWordleWeb.WordleLive do
   def mount(_params, _session, socket) do
     socket =
       socket
-      |> assign(guesses: [], attempts: @max_attempts, message: nil)
+      |> assign(guesses: [], attempts: @max_attempts, message: nil, win?: false)
 
-    case @wordle.get_length_and_clue() do
-      {:ok, %{length: length, clue: clue}} when length > 2 and length < 9 ->
-        {:ok, socket |> assign(length: length, clue: clue)}
+    case @wordle.get_word_info() do
+      {:ok, %{answer: answer, clue: clue, description: description}}
+      when byte_size(answer) > 2 and byte_size(answer) < 9 ->
+        {:ok,
+         socket
+         |> assign(
+           answer: answer,
+           length: String.length(answer),
+           clue: clue,
+           description: description
+         )}
 
       _ ->
         {:ok,
          socket
          |> assign(
            length: 0,
-           image_error: "Word not available",
+           image_error_msg: "Word not available",
            clue: "Today's word is not available",
            attempts: 0
-         )}
+         )
+         |> push_event("new_attempt", %{attempts: false})}
     end
   end
 
@@ -43,30 +52,35 @@ defmodule ElixirWordleWeb.WordleLive do
   def handle_event(
         "submit",
         %{"guess" => guess},
-        %{assigns: %{attempts: attempts, guesses: guesses}} = socket
+        %{assigns: %{attempts: attempts, guesses: guesses, answer: answer}} = socket
       ) do
-    case @wordle.feedback(guess) do
-      {:ok, %{guess: guess, feedback: feedback}} ->
-        (Enum.all?(feedback, fn x -> x == :match end) &&
-           {
-             :noreply,
-             socket
-             |> assign(
-               guesses: fill_guesses([{guess, feedback} | guesses], attempts - 1),
-               attempts: 0,
-               message: "You got it!"
-             )
-             |> push_event("new_attempt", %{attempts: false})
-           }) ||
-          {
-            :noreply,
-            socket
-            |> assign(guesses: [{guess, feedback} | guesses], attempts: attempts - 1)
-            |> push_event("new_attempt", %{attempts: true})
-          }
-
+    with {:ok, %{guess: guess, feedback: feedback}} <- @wordle.feedback(guess, answer),
+         win? <- Enum.all?(feedback, fn x -> x == :match end),
+         lost? <- Enum.any?(feedback, fn x -> x != :match end) and attempts == 1 do
+      ((win? or lost?) &&
+         {
+           :noreply,
+           socket
+           |> assign(
+             guesses: fill_guesses([{guess, feedback} | guesses], attempts - 1),
+             attempts: 0,
+             message: "You #{(win? && "won") || "lost"} !",
+             win?: win?
+           )
+           |> push_event("new_attempt", %{attempts: false})
+         }) ||
+        {
+          :noreply,
+          socket
+          |> assign(guesses: [{guess, feedback} | guesses], attempts: attempts - 1)
+          |> push_event("new_attempt", %{attempts: true})
+        }
+    else
       {:error, %{error: error_msg}} ->
         {:noreply, socket |> assign(message: %{error: error_msg})}
+
+      _ ->
+        {:noreply, socket |> assign(message: %{error: "Error"})}
     end
   end
 
@@ -90,27 +104,27 @@ defmodule ElixirWordleWeb.WordleLive do
 
     <%= if(@length == 0) do %>
       <div class="mx-auto space-y-1 max-w-xs w-4/5">
-        <.image_error text={@image_error} />
+        <.image_error text={@image_error_msg} id="image_error" />
       </div>
     <% else %>
       <div id="board" class=" grid grid-cols-1 gap-y-1">
         <.live_component
           module={ElixirWordleWeb.GuessesBoard}
-          id="guesses"
+          id="guesses-board"
           columns={@length}
           guesses={@guesses}
         />
 
         <.live_component
           module={ElixirWordleWeb.InputsBoard}
-          id="inputs"
+          id="inputs-board"
           attempts={@attempts}
           columns={@length}
         />
       </div>
     <% end %>
 
-    <p class="adjust-content mx-auto text-center my-6">
+    <p class="adjust-content mx-auto text-center my-6" id="clue">
       Clue: <strong><%= @clue %></strong>.
     </p>
 
@@ -165,6 +179,19 @@ defmodule ElixirWordleWeb.WordleLive do
         </ul>
         <br /> So, next try could be <span class="text-darkest_purple font-bold">ELIXIR</span>.
       </div>
+    </.modal>
+    """
+  end
+
+  def end_modal(assigns) do
+    ~H"""
+    <.modal id="wordle-rules">
+      <:title>
+        <span class="text-center font-bold text-2xl  text-darkest_purple">
+          You <% if @win?, do: " win", else: " lost" %> !
+        </span>
+      </:title>
+      @wordle.
     </.modal>
     """
   end
