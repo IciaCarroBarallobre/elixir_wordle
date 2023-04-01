@@ -57,24 +57,27 @@ defmodule ElixirWordleWeb.WordleLive do
     with {:ok, %{guess: guess, feedback: feedback}} <- @wordle.feedback(guess, answer),
          win? <- Enum.all?(feedback, fn x -> x == :match end),
          lost? <- Enum.any?(feedback, fn x -> x != :match end) and attempts == 1 do
-      ((win? or lost?) &&
-         {
-           :noreply,
-           socket
-           |> assign(
-             guesses: fill_guesses([{guess, feedback} | guesses], attempts - 1),
-             attempts: 0,
-             message: "You #{(win? && "won") || "lost"} !",
-             win?: win?
-           )
-           |> push_event("new_attempt", %{attempts: false})
-         }) ||
+      if win? or lost? do
+
+        {
+          :noreply,
+          socket
+          |> assign(
+            guesses: fill_guesses([{guess, feedback} | guesses], attempts - 1),
+            attempts: 0,
+            message: "You #{(win? && "won") || "lost"} !",
+            win?: win?
+          )
+          |> push_event("new_attempt", %{attempts: false})
+        }
+      else
         {
           :noreply,
           socket
           |> assign(guesses: [{guess, feedback} | guesses], attempts: attempts - 1)
           |> push_event("new_attempt", %{attempts: true})
         }
+      end
     else
       {:error, %{error: error_msg}} ->
         {:noreply, socket |> assign(message: %{error: error_msg})}
@@ -94,7 +97,7 @@ defmodule ElixirWordleWeb.WordleLive do
       <Heroicons.question_mark_circle class=" h-5 w-5 md:w-8 md:h-8  text-gray-600" />
     </button>
 
-    <%= modal_rules(assigns) %>
+    <.live_component module={ElixirWordleWeb.Rules} id="wordle-rules" />
 
     <p class="bg-slate-100 rounded adjust-content mx-auto text-center w-fit px-2 mt-2 mb-6">
       Play a version of Wordle where <strong> all the words are related to Elixir</strong>.
@@ -146,46 +149,9 @@ defmodule ElixirWordleWeb.WordleLive do
     fill_guesses([{word, nil} | guesses], attempts - 1)
   end
 
-  def modal_rules(assigns) do
+  def result_modal(assigns) do
     ~H"""
-    <.modal id="wordle-rules">
-      <:title>
-        <span class="text-center font-bold text-2xl  text-darkest_purple"> How to play </span>
-      </:title>
-
-      <div class="mt-2 text-sm leading-6 text-zinc-600">
-        <span>
-          In Elixir Wordle, players try to guess an Elixir-related word in a maximun of 6 tries.
-        </span>
-        <br /><br /> To start the game, enter any word: <br /><br />
-        <.live_component
-          module={ElixirWordleWeb.GuessesBoard}
-          id="example-guesses"
-          columns={6}
-          guesses={[{"erlang", [:match, :letter_match, :letter_match, :fail, :fail, :fail]}]}
-        />
-        <br />
-        <ul class=" rounded bg-slate-50">
-          <li>
-            <span class="font-bold"> A </span>, <span class="font-bold"> N </span>,
-            <span class="font-bold"> G </span>
-            aren't in the word at all.
-          </li>
-          <li>
-            <span class="font-bold"> R </span>, <span class="font-bold"> L </span>
-            is in the word but in the wrong tile.
-          </li>
-          <li><span class="font-bold"> E </span> is in the word and in the correct tile.</li>
-        </ul>
-        <br /> So, next try could be <span class="text-darkest_purple font-bold">ELIXIR</span>.
-      </div>
-    </.modal>
-    """
-  end
-
-  def end_modal(assigns) do
-    ~H"""
-    <.modal id="wordle-rules">
+    <.modal id="results" >
       <:title>
         <span class="text-center font-bold text-2xl  text-darkest_purple">
           You <% if @win?, do: " win", else: " lost" %> !
