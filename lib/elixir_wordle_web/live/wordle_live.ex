@@ -58,7 +58,6 @@ defmodule ElixirWordleWeb.WordleLive do
          win? <- Enum.all?(feedback, fn x -> x == :match end),
          lost? <- Enum.any?(feedback, fn x -> x != :match end) and attempts == 1 do
       if win? or lost? do
-
         {
           :noreply,
           socket
@@ -151,7 +150,7 @@ defmodule ElixirWordleWeb.WordleLive do
 
   def result_modal(assigns) do
     ~H"""
-    <.modal id="results" >
+    <.modal id="results">
       <:title>
         <span class="text-center font-bold text-2xl  text-darkest_purple">
           You <% if @win?, do: " win", else: " lost" %> !
