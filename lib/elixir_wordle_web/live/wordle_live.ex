@@ -11,15 +11,14 @@ defmodule ElixirWordleWeb.WordleLive do
       |> assign(guesses: [], attempts: @max_attempts, message: nil, win?: false)
 
     case @wordle.get_word_info() do
-      {:ok, %{answer: answer, clue: clue, description: description}}
+      {:ok, %{answer: answer, clue: clue}}
       when byte_size(answer) > 2 and byte_size(answer) < 9 ->
         {:ok,
          socket
          |> assign(
            answer: answer,
            length: String.length(answer),
-           clue: clue,
-           description: description
+           clue: clue
          )}
 
       _ ->
@@ -64,8 +63,7 @@ defmodule ElixirWordleWeb.WordleLive do
           |> assign(
             guesses: fill_guesses([{guess, feedback} | guesses], attempts - 1),
             attempts: 0,
-            message: "You #{(win? && "won") || "lost"} !",
-            win?: win?
+            message: "You #{(win? && "won") || "lost"} !"
           )
           |> push_event("new_attempt", %{attempts: false})
         }
@@ -146,18 +144,5 @@ defmodule ElixirWordleWeb.WordleLive do
   defp fill_guesses([{guess, _feedback} | _t] = guesses, attempts) when attempts > 0 do
     word = for _i <- 1..String.length(guess), do: " ", into: ""
     fill_guesses([{word, nil} | guesses], attempts - 1)
-  end
-
-  def result_modal(assigns) do
-    ~H"""
-    <.modal id="results">
-      <:title>
-        <span class="text-center font-bold text-2xl  text-darkest_purple">
-          You <% if @win?, do: " win", else: " lost" %> !
-        </span>
-      </:title>
-      @wordle.
-    </.modal>
-    """
   end
 end
