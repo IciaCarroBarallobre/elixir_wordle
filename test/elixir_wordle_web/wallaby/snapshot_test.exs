@@ -77,7 +77,8 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
     ElixirWordle.MockWordleAPI
     |> expect(:feedback, 1, fn _guess, _answer ->
-      {:ok, %{feedback: [:match, :match, :match, :match, :match, :match], guess: mock_data.answer}}
+      {:ok,
+       %{feedback: [:match, :match, :match, :match, :match, :match], guess: mock_data.answer}}
     end)
 
     word = String.upcase(mock_data.answer)

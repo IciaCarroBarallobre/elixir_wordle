@@ -144,7 +144,11 @@ defmodule ElixirWordleWeb.WordleLive do
       class="mx-auto rounded-md right-0 top-2 sm:top-3 z-30 mt-2 sm:mt-1 fixed mr-2 sm:mr-8 "
     >
       <%= if @ends? do %>
-        <button id="button-results" phx-click={show_modal("results")} class="  rounded-md mx-1 md:mx-3">
+        <button
+          id="button-results"
+          phx-click={show_modal("results")}
+          class="  rounded-md mx-1 md:mx-3"
+        >
           <Heroicons.chart_bar solid class=" h-6 w-6 md:w-8 md:h-8 text-darkest_purple" />
         </button>
       <% end %>
