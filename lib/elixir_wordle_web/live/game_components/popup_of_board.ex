@@ -12,9 +12,9 @@ defmodule ElixirWordleWeb.PopupOfBoard do
       id={@id}
       class={
             "bg-darkest_purple text-white shadow-xl rounded
-             adjust-content text-center
-             fixed top-24 right-0 left-0 z-40
-             w-fit mx-auto  py-2 px-4 animate-bounce
+             adjust-content text-center self-center
+             absolute right-0 left-0 z-10
+             w-fit mx-auto py-4 px-4 animate-bounce
              #{if(is_nil(@message), do: " hidden ", else: " block")}
              "
       }

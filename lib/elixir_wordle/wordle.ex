@@ -16,10 +16,10 @@ defmodule ElixirWordle.Wordle do
     %{
       answer: "sigil",
       clue: "Mechanisms for working with textual representations",
-      description:
-        "Sigils start with the tilde (~) character which is followed by a letter and then a delimiter.
-       Common sigils: ~r regex expressions, ~c charlist, ~s strings, ~w  lists of words,
-       ~D date, ~T time etc."
+      description: "Sigils are mechanisms for working with textual representations.
+        They start with the tilde (~) character which is followed by a letter and then a delimiter.
+        Common sigils: ~r, regex expressions; ~c, charlist; ~s, strings; ~w, lists of words;
+        ~D, date; ~T, time;"
     }
   end
 

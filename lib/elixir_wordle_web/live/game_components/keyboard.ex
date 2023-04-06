@@ -28,7 +28,7 @@ defmodule ElixirWordleWeb.Keyboard do
           $dispatch('key-press', {key: value, length: length})
         },
         keyboardPressUp(value) {
-          $refs['key-'+value].focus()
+          //$refs['key-'+value].focus()
           $refs['key-'+value].click()
         },
       }"
