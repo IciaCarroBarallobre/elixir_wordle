@@ -32,9 +32,9 @@ Initially, for the first functional version where there is no backend to search 
 
 Table displaying wallaby screenshots with 640px width:
 
-| <img width="500px" alt="Screenshot of wordle page 640px width when word is available" src="/docs/images/screenshots/screenshot-w-640.png" /> |  <img width="500px" alt="Screenshot of wordle page when word is not available" src="/docs/images/screenshots/screenshot-w-unavailable-word-640.png" /> |
+| <img width="500px" alt="Screenshot of wordle page 640px width when word is available" src="/docs/images/screenshots/screenshot-w-640.png" /> |  <img width="500px" alt="Screenshot of wordle page when word is not available" src="/docs/images/screenshots/screenshot-unavailable-word-w-640.png" /> |
 | -- | -- |
-| <img width="500px" alt="Screenshot of wordle page 640px width when rules are displayed" src="/docs/images/screenshots/screenshot-w-instructions-640.png" /> |  |
+| <img width="500px" alt="Screenshot of wordle page 640px width when rules are displayed" src="/docs/images/screenshots/screenshot-rules-w-640.png" /> | <img width="500px" alt="Screenshot of wordle page 640px width when rules are displayed" src="/docs/images/screenshots/screenshot-results-w-640.png" /> |
 
 To examine additional widths, please refer to the [screenshots folder](./images/screenshots/).
 
