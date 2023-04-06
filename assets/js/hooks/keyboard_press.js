@@ -38,6 +38,7 @@ export default {
           this.current_tile = this.current_tile - 1;
           let el = document.getElementById("input-1-" + this.current_tile);
           el.classList.replace("border-light_purple", "border-slate-300");
+          el.classList.toggle("animate-pop")
           el.innerHTML = " ";
 
         }
@@ -51,6 +52,7 @@ export default {
 
             let el = document.getElementById("input-1-" + this.current_tile);
             el.classList.replace("border-slate-300", "border-light_purple");
+            el.classList.toggle("animate-pop")
             el.innerHTML = key;
 
             this.current_tile = this.current_tile + 1;
