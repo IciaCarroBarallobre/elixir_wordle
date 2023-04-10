@@ -10,13 +10,10 @@ defmodule ElixirWordleWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/", ElixirWordleWeb do
     pipe_through :browser
-    live "/", WordleLive
+    live("/", WordleLive, :index)
+    live("/error", WordleErrorLive, :index)
   end
 
   # Other scopes may use custom stacks.

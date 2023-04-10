@@ -34,3 +34,7 @@ npm-debug.log
 
 # SVG images folder
 /priv/static/images/SVG
+
+#IDE & extensions
+.vscode
+.elixir_ls

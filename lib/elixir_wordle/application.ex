@@ -16,8 +16,6 @@ defmodule ElixirWordle.Application do
       {Finch, name: ElixirWordle.Finch},
       # Start the Endpoint (http/https)
       ElixirWordleWeb.Endpoint
-      # Start a worker by calling: ElixirWordle.Worker.start_link(arg)
-      # {ElixirWordle.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

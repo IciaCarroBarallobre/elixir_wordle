@@ -1,13 +1,12 @@
-<header class={
-    " sticky top-0 right-0 z-30 w-full bg-white shadow-xlmb-40 border-b-2"
-    <> " px-2 py-4"
-        <> " px-2 py-4"
-        <> " text-center font-bold  text-3xl  text-darkest_purple "
-        <> " sm:px-6 lg:px-8 md:text-4xl"
-  }>
-  <div class="inline-flex">
-    <img src={~p"/images/icon/favicon-512x512.png"} class="h-9" alt="(Logo)" />
-    <br /> Elixir Wordle
+<header class=" sticky top-0 right-0 z-30 w-full bg-white shadow-xlmb-40 border-b-2
+      sm:text-center font-bold  text-3xl md:text-4xl text-darkest_purple  
+      py-2 md:py-4
+      px-2 md:px-6 lg:px-8 ">
+  <div class="inline-flex self-start">
+    <div class="inline-flex ml-0">
+      <img src={~p"/images/icon/favicon-512x512.png"} class="h-8 md:h-9" alt="Icon" />
+      Elixir Wordle
+    </div>
   </div>
 </header>
 <main class="px-4 py-2 sm:px-6 lg:px-8">
@@ -25,6 +24,7 @@
     >
       Attempting to reconnect <Heroicons.arrow_path class="ml-1 w-3 h-3 inline animate-spin" />
     </.flash>
+
     <%= @inner_content %>
   </div>
 </main>

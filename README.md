@@ -3,25 +3,22 @@
 ## Table of contents
 
 1. [Game description](#game-description)
-2. [Design](#design)
-3. [Contributing](#contributing)
+2. [Running the game & tools used](#running-the-game)
+3. [Design Info](#design-info)
+4. [Contributing](#contributing)
 
 ## Game description
 
-In **Elixir Wordle**, **players try to guess an Elixir-related word based on the frequency of its letters in a web-based game**.
-The goal is to select the correct letters and arrange them in the correct order.
+**Elixir Wordle** is a **web-based game** where players attempt to **guess an Elixir-related word** based on the frequency of its letters. The objective is to choose the **correct letters** and arrange them **in the correct order**.
 
-Each day, **a random word is chosen**, and players are given **two clues** to help them guess the word:
+**Each day, a random word is selected**, and players are provided with two clues to help them guess the word:
 
-- The **length** indicated by a number of blank spaces.
+- **The word's length**, indicated by a number of blank spaces.
 - **A short phrase**.
 
-Players have **6 attempts** to guess the word, and if the word is of the correct length and a valid Elixir-related word, feedback is provided.
+Players have **six attempts to guess the word**, and if they correctly guess a valid Elixir-related word of the correct length, feedback is provided.
 
-**Incorrect letters** are displayed in **gray** (⬜), **correct letters** in **yellow** (🟨), and **correctly placed letters** in **green** (🟩).
-
-The game continues until the player successfully guesses the word or exhausts all attempts.
-Finally, the word is revealed and some information is given regarding it.
+Example where **incorrect letters** are displayed in **gray** (⬜), **correct letters** in **yellow** (🟨), and **correctly placed letters** in **green** (🟩):
 
 ```bash
 CLUE: "Datatype"
@@ -29,17 +26,33 @@ CLUE: "Datatype"
 ⬜⬜⬜⬜⬜ length(word) => 5 
 ⬜🟨⬜⬜🟨 Trying... 'FLOAT' => Now you know that contains 'L' and 'T'.
 🟨⬜⬜🟨⬜ Trying... 'LISTS'
-🟩⬜⬜🟨⬜ Trying... 'TREES' => Now you that the word starts with 'T'.
-🟩🟩🟩🟩🟩 Trying... 'TUPLE' => Nice! :) 
-
-INFO: Did you know that tuples store elements contiguously in memory? 
-This means accessing a tuple element by index or getting the tuple size is a fast operation.
+🟩⬜⬜🟨⬜ Trying... 'TREES' => Now you know the word starts with 'T'.
+🟩🟩🟩🟩🟩 Trying... 'TUPLE' => You got it!
 ```
 
-## Design
+## Running the game
 
-To access additional information about design, follow [the link](./docs/design.md).
+To start your Phoenix server:
+
+1. Install dependencies: `mix deps.get`.
+2. Start Phoenix endpoint `mix phx.server` or `iex -S mix phx.server`(inside IEx).
+3. Visit [`localhost:4000`](http://localhost:4000).
+
+### Tools used
+
+The following tools were used in the development of this project:
+
+- [Phoenix](https://www.phoenixframework.org/): an open-source web development framework written in the Elixir programming language.
+- [Wallaby](https://github.com/elixir-wallaby/wallaby): our end-to-end testing tool, which also allows us to take responsive screenshots [(here)](./docs/design.md). By default, test configuration excludes wallaby tests. To run only Wallaby tests, use the following command:
+
+```elixir
+mix test --only wallaby
+```
+
+## Design Info
+
+For additional information about the design, please visit the following [link](./docs/design.md).
 
 ## Contributing
 
-Your contributions to this project are highly valued. If you have a suggestion for a new feature or encounter a bug, kindly open an issue or submit a pull request.
+We value your contributions to this project. If you have suggestions for new features or encounter any bugs, please open an issue or fork the project and then submit a pull request.
