@@ -177,9 +177,6 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       assert {:ok, view, _html} = live(conn, "/")
       render_hook(view, :submit, %{guess: @generic_data.answer})
 
-      # Result button is render after 1'7s
-      :timer.sleep(1800)
-
       assert view |> has_element?("#button-results")
     end
   end

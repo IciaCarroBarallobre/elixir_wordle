@@ -20,3 +20,6 @@ config :wallaby,
 
 # Behaviour for Wordle
 config :elixir_wordle, :wordle_api, ElixirWordle.MockWordleAPI
+
+# End results delay to 0
+config :elixir_wordle, :end_delay, 0

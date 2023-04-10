@@ -58,7 +58,7 @@ defmodule ElixirWordleWeb.WordleLive do
          win? <- Enum.all?(feedback, fn x -> x == :match end),
          lost? <- Enum.any?(feedback, fn x -> x != :match end) and attempts == 1 do
       if win? or lost? do
-        Process.send_after(self(), :ends, 1700)
+        Process.send_after(self(), :ends, get_delay())
 
         {
           :noreply,
@@ -185,4 +185,8 @@ defmodule ElixirWordleWeb.WordleLive do
 
   defp get_guesses_feedback(guesses),
     do: for({_guess, feedback} <- guesses, not is_nil(feedback), do: feedback)
+
+  defp get_delay do
+    Application.get_env(:elixir_wordle, :end_delay, 1700)
+  end
 end
