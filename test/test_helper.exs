@@ -2,7 +2,7 @@ Mox.defmock(ElixirWordle.WordleMock, for: ElixirWordle.WordleAPI)
 Application.put_env(:elixir_wordle, :wordle_api, ElixirWordle.WordleMock)
 
 ExUnit.start()
-ExUnit.configure(exclude: :wallaby)
+ExUnit.configure(exclude: [:wallaby, :slow_test])
 
 # Wallaby
 {:ok, _} = Application.ensure_all_started(:wallaby)
