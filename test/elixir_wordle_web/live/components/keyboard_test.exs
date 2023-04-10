@@ -1,6 +1,6 @@
 defmodule ElixirWordleWeb.KeyboardTest do
   use ExUnit.Case
-  use ElixirWordleWeb.ConnCase
+  use ElixirWordleWeb.ConnCase, async: true
 
   use Wallaby.Feature
 

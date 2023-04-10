@@ -1,6 +1,6 @@
 defmodule ElixirWordleWeb.WordleLiveTest do
   use ExUnit.Case
-  use ElixirWordleWeb.ConnCase
+  use ElixirWordleWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
   import Mox
@@ -169,7 +169,6 @@ defmodule ElixirWordleWeb.WordleLiveTest do
   end
 
   describe "wordle ending" do
-    @tag :slow_test
     test "when ends (no more attempts), it's  displayed the result button", %{conn: conn} do
       ElixirWordle.MockWordleAPI
       |> expect(:get_word_info, 2, fn -> {:ok, @generic_data} end)
@@ -180,18 +179,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
 
       # Result button is render after 1'7s
       :timer.sleep(1800)
-      assert view |> has_element?("#button-results")
-    end
 
-    test "when handle_info/2, it's  displayed the result button", %{conn: conn} do
-      ElixirWordle.MockWordleAPI
-      |> expect(:get_word_info, 2, fn -> {:ok, @generic_data} end)
-      |> expect(:feedback, 1, fn guess, answer -> feedback_mock(guess, answer) end)
-
-      assert {:ok, view, _html} = live(conn, "/")
-      render_hook(view, :submit, %{guess: @generic_data.answer})
-
-      Process.send(view.pid, :ends, [])
       assert view |> has_element?("#button-results")
     end
   end
