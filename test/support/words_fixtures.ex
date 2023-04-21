@@ -17,6 +17,6 @@ defmodule ElixirWordle.WordsFixtures do
       })
       |> ElixirWordle.Words.create_word()
 
-      word
+    word
   end
 end
