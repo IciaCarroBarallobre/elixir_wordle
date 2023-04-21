@@ -1,38 +1,85 @@
 name: Elixir CI
-
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # adapt branch for project
   pull_request:
-    branches: 
-      - '*'
+    branches: [ "main" ]  # adapt branch for project
+
+# Sets the ENV `MIX_ENV` to `test` for running tests
+env:
+  MIX_ENV: test
 
 permissions:
   contents: read
 
 jobs:
-  build:
+  test:
+    # Set up a Postgres DB service. By default, Phoenix applications
+    # use Postgres. This creates a database for running tests.
+    # Additional services can be defined here if required.
+    services:
+      db:
+        image: postgres:12
+        ports: ['5432:5432']
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-    name: Build and test
-    runs-on: ubuntu-20.04
-    env:
-      otp: 25.1.0
-      elixir: 1.14.0
-
+    runs-on: ubuntu-latest
+    name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+    strategy:
+      # Specify the OTP and Elixir versions to use when building
+      # and running the workflow steps.
+      matrix:
+        otp: ['25.1.0']       # Define the OTP version [required]
+        elixir: ['1.14.1']    # Define the elixir version [required]
+    
     steps:
-    - uses: actions/checkout@v3
-    - name: Install OTP and Elixir
+    - name: Set up Elixir
       uses: erlef/setup-beam@v1
       with:
-          otp-version: ${{ env.otp }}
-          elixir-version: ${{ env.elixir }}
-    - name: Restore dependencies cache
+        otp-version: ${{matrix.otp}}
+        elixir-version: ${{matrix.elixir}}
+        
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step: Define how to cache deps. Restores existing cache if present.
+    - name: Cache deps
+      id: cache-deps
       uses: actions/cache@v3
+      env:
+        cache-name: cache-elixir-deps
       with:
         path: deps
-        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-mix-
+        key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-mix-${{ env.cache-name }}-
+
+    - name: Cache compiled build
+      id: cache-build
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-compiled-build
+      with:
+        path: _build
+        key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-mix-${{ env.cache-name }}-
+          ${{ runner.os }}-mix-
+
+    # Step: Download project dependencies. If unchanged, uses the cached version.
     - name: Install dependencies
       run: mix deps.get
+
+    # Step: Compile the project treating any warnings as errors.
+    - name: Compiles without warnings
+      run: mix compile --warnings-as-errors
+
+    # Step: Execute the tests.
     - name: Run tests
       run: mix test
