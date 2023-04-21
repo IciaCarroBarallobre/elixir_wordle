@@ -13,11 +13,9 @@ defmodule ElixirWordleWeb.Rules do
     ~H"""
     <div id={"#{@id}-div"}>
       <.modal id={@id}>
-        <:title>
-          <p class="text-center font-bold text-2xl text-darkest_purple">How to play</p>
-        </:title>
+        <:title>How to play</:title>
 
-        <div class="mt-2 text-sm leading-6 text-zinc-600">
+        <div class="mt-2 text-base leading-6 text-zinc-600">
           <p class="my-4">
             In Elixir Wordle, players try to guess an Elixir-related word in a maximun of 6 tries.
             <br /> <br /> To start the game, enter any word:
@@ -31,7 +29,7 @@ defmodule ElixirWordleWeb.Rules do
             animation={false}
           />
 
-          <div class=" rounded-md bg-slate-50 m-4 mx-4 px-4">
+          <div class=" rounded-md bg-slate-50 m-5 px-4">
             <ul>
               <li>
                 <span class="font-bold"> A </span>, <span class="font-bold"> N </span>,
@@ -54,7 +52,7 @@ defmodule ElixirWordleWeb.Rules do
             animation={false}
           />
 
-          <p class="mx-auto text-center mt-4 font-bold">Got it!</p>
+          <p class="mx-auto text-center mt-6 font-bold">Got it!</p>
         </div>
       </.modal>
     </div>

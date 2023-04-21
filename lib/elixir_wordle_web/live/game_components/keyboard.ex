@@ -24,8 +24,8 @@ defmodule ElixirWordleWeb.Keyboard do
       x-data="{
         keyValue: '',
         lengthValue: 0,
-        changeKey(value, length) {
-          $dispatch('key-press', {key: value, length: length})
+        changeKey(value) {
+          $dispatch('key-press', {key: value})
         },
         keyboardPressUp(value) {
           //$refs['key-'+value].focus()
@@ -51,7 +51,7 @@ defmodule ElixirWordleWeb.Keyboard do
               type="button"
               data-key={key}
               x-ref={"key-#{key}"}
-              @click={"changeKey('#{key}', #{@word_max_length})"}
+              @click={"changeKey('#{key}')"}
               {%{"@keyup.window.#{key}"=> "keyboardPressUp('#{key}')"}}
             >
               <%= case key do %>

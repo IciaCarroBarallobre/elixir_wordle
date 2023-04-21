@@ -1,6 +1,6 @@
 defmodule ElixirWordleWeb.KeyboardTest do
   use ExUnit.Case
-  use ElixirWordleWeb.ConnCase, async: true
+  use ElixirWordleWeb.ConnCase
 
   use Wallaby.Feature
 
@@ -9,12 +9,17 @@ defmodule ElixirWordleWeb.KeyboardTest do
   setup :set_mox_from_context
   setup :verify_on_exit!
 
+  @word_info %{
+    word: "elixir",
+    clue: "A language",
+    description:
+      "Elixir is a dynamic, functional language for building scalable and maintainable applications"
+  }
+
   @tag :wallaby
   feature "JS Client test: screen keyboard works with inputs", %{session: session} do
-    mock_data = %{answer: "elixir", clue: "This is the clue", description: ""}
-
     ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, mock_data} end)
+    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
 
     session
     |> visit("/")
@@ -24,10 +29,8 @@ defmodule ElixirWordleWeb.KeyboardTest do
 
   @tag :wallaby
   feature "JS Client test: external keyboard linked to screen keyboard", %{session: session} do
-    mock_data = %{answer: "elixir", clue: "This is the clue", description: ""}
-
     ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, mock_data} end)
+    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
 
     session |> visit("/") |> send_keys([:B]) |> assert_text(Query.css("#input-1-1"), "B")
   end

@@ -1,5 +1,8 @@
 defmodule ElixirWordle.Wordle do
+  alias ElixirWordle.Words
+  alias ElixirWordle.Words.Word
   @behaviour ElixirWordle.WordleAPI
+  @avaliable_words 91
 
   @moduledoc """
   Wordle Module can check how many exact matches, same position and letter,
@@ -12,26 +15,18 @@ defmodule ElixirWordle.Wordle do
   Both words have to contains same length and use only UTF-8 characters.
   """
 
-  defp answer() do
-    %{
-      answer: "sigil",
-      clue: "Mechanisms for working with textual representations",
-      description: "Sigils are mechanisms for working with textual representations.
-        They start with the tilde (~) character which is followed by a letter and then a delimiter.
-        Common sigils: ~r, regex expressions; ~c, charlist; ~s, strings; ~w, lists of words;
-        ~D, date; ~T, time;"
-    }
-  end
-
   @impl ElixirWordle.WordleAPI
-  def get_word_info(),
-    do:
-      {:ok,
-       %{
-         answer: answer().answer,
-         clue: answer().clue,
-         description: answer().description
-       }}
+  def get_word_info() do
+    id = rem(Date.day_of_year(Date.utc_today()), @avaliable_words)
+
+    case Words.get_word(id) do
+      %Word{word: word, clue: clue, description: description} ->
+        {:ok, %{word: word, clue: clue, description: description}}
+
+      _ ->
+        {:error, "Word not available"}
+    end
+  end
 
   @impl ElixirWordle.WordleAPI
   def feedback(guess, answer)
