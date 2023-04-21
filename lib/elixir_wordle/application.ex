@@ -10,6 +10,8 @@ defmodule ElixirWordle.Application do
     children = [
       # Start the Telemetry supervisor
       ElixirWordleWeb.Telemetry,
+      # Repo
+      {ElixirWordle.Repo, []},
       # Start the PubSub system
       {Phoenix.PubSub, name: ElixirWordle.PubSub},
       # Start Finch

@@ -10,12 +10,17 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
   @height 844
   @responsive_width [sm: 640, md: 768, lg: 1024]
 
+  @word_info %{
+    word: "elixir",
+    clue: "A language",
+    description:
+      "Elixir is a dynamic, functional language for building scalable and maintainable applications"
+  }
+
   @tag :wallaby
   feature "wallaby screenshot when answer has a supported length", %{session: session} do
-    mock_data = %{answer: "elixir", clue: "This is the clue", description: ""}
-
     ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, mock_data} end)
+    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
 
     home = session |> visit("/")
 
@@ -43,10 +48,8 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
   @tag :wallaby
   feature "wallaby screenshot for rules", %{session: session} do
-    mock_data = %{answer: "elixir", clue: "This is the clue", description: ""}
-
     ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, mock_data} end)
+    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
 
     home =
       session
@@ -64,24 +67,15 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
   @tag :wallaby
   feature "wallaby screenshot for results", %{session: session} do
-    mock_data = %{
-      answer: "elixir",
-      clue: "This is the clue",
-      description:
-        "Elixir is a dynamic, functional language for building scalable and maintainable applications.
-        Elixir runs on the Erlang VM, known for creating low-latency, distributed, and fault-tolerant systems. "
-    }
-
     ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, mock_data} end)
+    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
 
     ElixirWordle.MockWordleAPI
     |> expect(:feedback, 1, fn _guess, _answer ->
-      {:ok,
-       %{feedback: [:match, :match, :match, :match, :match, :match], guess: mock_data.answer}}
+      {:ok, %{feedback: [:match, :match, :match, :match, :match, :match], guess: @word_info.word}}
     end)
 
-    word = String.upcase(mock_data.answer)
+    word = String.upcase(@word_info.word)
 
     keys =
       for letter <- word |> String.split("", trim: true) do

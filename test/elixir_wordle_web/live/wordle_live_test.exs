@@ -8,7 +8,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
   setup :verify_on_exit!
 
   @generic_data %{
-    answer: "erlang",
+    word: "erlang",
     clue: "A language",
     description: "Erlang is a general-purpose programming language and runtime environment.
           Erlang has built-in support for concurrency, distribution and fault tolerance."
@@ -60,7 +60,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       # Set the clue & the input board with maximum number attempts
       assert view |> element("#clue") |> render() =~ @generic_data.clue
 
-      columns = String.length(@generic_data.answer)
+      columns = String.length(@generic_data.word)
       inputs_html = view |> element("#inputs-board") |> render()
 
       assert inputs_html
@@ -106,18 +106,18 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       assert view |> element("#warningMessage") |> render() =~ "Not enough letters"
     end
 
-    test "when the guess contains more letters than the answer, a message will be displayed",
+    test "when the guess contains more letters than the answer, the word is cut to the answer length",
          %{conn: conn} do
       ElixirWordle.MockWordleAPI
       |> expect(:get_word_info, 2, fn -> {:ok, @generic_data} end)
+      |> expect(:feedback, 1, fn guess, answer -> feedback_mock(guess, answer) end)
 
       assert {:ok, view, _html} = live(conn, "/")
 
-      # Submit a guess which has more length than the answer, it has to display a warning message
       guess = "erlangss"
       render_hook(view, :submit, %{guess: guess})
-      assert view |> element("#warningMessage") |> render() =~ "Too many letters"
-      refute view |> element("#guesses-board") |> render() =~ guess
+
+      assert view |> element("#warningMessage") |> render() =~ "You won !"
     end
   end
 
@@ -128,10 +128,10 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       |> expect(:feedback, 1, fn guess, answer -> feedback_mock(guess, answer) end)
 
       assert {:ok, view, _html} = live(conn, "/")
-      render_hook(view, :submit, %{guess: @generic_data.answer})
+      render_hook(view, :submit, %{guess: @generic_data.word})
 
       # The word is set at guesses-board & the congratulation message is displayed
-      assert view |> element("#guesses-board") |> render() =~ @generic_data.answer
+      assert view |> element("#guesses-board") |> render() =~ @generic_data.word
       assert view |> element("#warningMessage") |> render() =~ "You won !"
 
       # There are no more inputs' tiles
@@ -175,7 +175,7 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       |> expect(:feedback, 1, fn guess, answer -> feedback_mock(guess, answer) end)
 
       assert {:ok, view, _html} = live(conn, "/")
-      render_hook(view, :submit, %{guess: @generic_data.answer})
+      render_hook(view, :submit, %{guess: @generic_data.word})
 
       assert view |> has_element?("#button-results")
     end
