@@ -4,7 +4,7 @@ defmodule ElixirWordle.WordsTest do
   alias ElixirWordle.Words
   alias ElixirWordle.Words.Word
 
-  describe "words" do
+  describe "words context test" do
     import ElixirWordle.WordsFixtures
 
     test "get_word/1 returns the word with given id if exists" do
