@@ -10,13 +10,6 @@ import Config
 config :elixir_wordle,
   ecto_repos: [ElixirWordle.Repo]
 
-config :elixir_wordle, ElixirWordle.Repo,
-  database: "elixir_wordle",
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  port: "5432"
-
 # Configures the endpoint
 config :elixir_wordle, ElixirWordleWeb.Endpoint,
   url: [host: "localhost"],
