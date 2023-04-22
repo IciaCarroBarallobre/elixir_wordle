@@ -15,7 +15,14 @@ defmodule ElixirWordle.Words.Word do
     timestamps()
   end
 
-  @doc false
+  @doc """
+  Changesets allow filtering, casting, validation and definition of constraints when manipulating structs.
+
+  In this scenario, the validations are:
+  - Word, clue and description are not empty.
+  - Word is unique, within a length range of 3 to 8 characters from a to z.
+  - Confirm that the clue does not already contain the word.
+  """
   def changeset(word, attrs) do
     word
     |> cast(attrs, [:word, :clue, :description])

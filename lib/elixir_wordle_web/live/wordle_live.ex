@@ -141,7 +141,10 @@ defmodule ElixirWordleWeb.WordleLive do
       </div>
     <% end %>
 
-    <p class="adjust-content mx-auto text-center my-6" id="clue">
+    <p
+      class="adjust-content mx-auto text-center my-6 mt-2 xl:w-2/3 md:w-4/5 w-full px-2 mb-5 adjust-content"
+      id="clue"
+    >
       Clue: <strong><%= @clue %></strong>
     </p>
 
