@@ -6,9 +6,15 @@ const plugin = require("tailwindcss/plugin")
 module.exports = {
   mode: 'jit',
   content: [
-    "./js/**/*.js",
-    "../lib/*_web.ex",
-    "../lib/*_web/**/*.*ex"
+    "../**/*.html.eex",
+    "../**/*.html.leex",
+    "../**/*.html.heex",
+    "../../core/lib/schemas/*.ex",
+    "../**/components/**/*.ex",
+    "../lib/web/components.ex",
+    "../**/views/**/*.ex",
+    "../**/live/**/*.ex",
+    "./js/**/*.js"
   ],
   theme: {
     fontFamily: {
