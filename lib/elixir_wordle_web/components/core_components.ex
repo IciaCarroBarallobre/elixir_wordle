@@ -15,6 +15,28 @@ defmodule ElixirWordleWeb.CoreComponents do
   import ElixirWordleWeb.Gettext
 
   @doc """
+  Renders a footer
+  """
+  attr :name, :string, required: true
+  attr :footer_items, :list, required: true
+
+  def footer(assigns) do
+    ~H"""
+    <footer class="bottom-0 mx-auto w-full text-gray-600 p-4 border-t border-gray-200
+      md:flex md:items-center md:justify-between md:p-6 ">
+      <div class="text-sm sm:text-center">
+        © 2023 - <%= @name %>
+      </div>
+      <ul class="flex flex-wrap items-center mt-3 text-sm font-medium sm:mt-0">
+        <%= for {name, link} <- @footer_items do %>
+          <li><a href={link} class="mr-4 hover:underline md:mr-6"><%= name %></a></li>
+        <% end %>
+      </ul>
+    </footer>
+    """
+  end
+
+  @doc """
   Renders icons dynamically
   """
   attr :rest, :global,

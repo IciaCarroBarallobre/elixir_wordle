@@ -10,7 +10,7 @@
   </div>
 </header>
 <main class="px-4 py-2 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-2xl ">
+  <div class="mx-auto max-w-2xl pb-10">
     <.flash kind={:info} title="Success!" flash={@flash} />
     <.flash kind={:error} title="Error!" flash={@flash} />
     <.flash
@@ -27,4 +27,14 @@
 
     <%= @inner_content %>
   </div>
+
+  <.footer
+    name="Elixir Wordle"
+    footer_items={[
+      {"GitHub", "https://github.com/IciaCarroBarallobre/elixir_wordle"},
+      {"Contributors", "https://github.com/IciaCarroBarallobre/elixir_wordle#contributors"},
+      {"Issues", "https://github.com/IciaCarroBarallobre/elixir_wordle/issues"},
+      {"Contact", "https://twitter.com/IciaCB"}
+    ]}
+  />
 </main>

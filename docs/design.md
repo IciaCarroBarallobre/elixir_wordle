@@ -11,13 +11,13 @@
 
 ### Flow diagram
 
-Main flow of the page:
+Main flow of the page per each day word:
 
 ![Flow Diagram](/docs/images/diagrams/flow_diagram.png)
 
 ### Sequence diagram
 
-Main sequence of the page, including layers interation (browser, endpoints, ..., db): TODO
+Main sequence of the page, including layers interaction (browser, endpoints, db):
 
 ![Sequence Diagram](/docs/images/diagrams/sequence_diagram.png)
 
@@ -26,7 +26,7 @@ Main sequence of the page, including layers interation (browser, endpoints, ...,
 | <img width="500px" alt="Mockup of wordle page" src="/docs/images/mockups/page1.png" /> | <img width="430px" alt="Mockup of end game page" src="/docs/images/mockups/page2.png" /> |
 | -- | -- |
 
-Initially, for the first functional version where there is no backend to search for words, the second page is not necessary. Language will be a lower priority along with color-blind mode, accept only valid words and dark theme.
+For the MVP feature like setting the language, color-blind model, keyboard feedback, only valid words and dark theme, are not necessary.
 
 ### Frontend Screenshots  (responsive)
 
@@ -46,9 +46,8 @@ To produce the screenshots and evaluate client-server cross-functional behaviors
 mix test --only wallaby
 ```
 
-### Other ideas
+### Future ideas
 
 Take into account ...
 
 - Words considered valid are extracted using regex from a specific version of the [Elixir repository](https://github.com/elixir-lang/elixir/tags), specified in the [.env](/.env) file.
-- If we specify the keyboard on the page, we will clearly indicate the possible input.
