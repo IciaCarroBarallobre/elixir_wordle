@@ -14,6 +14,7 @@
 - Get next word info each day.
 - The server handles all possible events, although the client only sends events when necessary.
 - Created components including a button panel for modals, modals (rules, results), warning messages, keyboard, boards (input-board, guesses board), and footer.
+- Copy & Share result button on the 2nd page.
 
 ### Backend
 

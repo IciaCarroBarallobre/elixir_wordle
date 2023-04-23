@@ -13,12 +13,10 @@ defmodule ElixirWordleWeb.Results do
         <:title><%= (@win? && "Congrats! You won ✌️") || "Oh no, you lost 😖" %></:title>
 
         <div id="emoji-board" class="mx-auto text-center mt-8 mb-4 text-lg text-purple pb-2">
-        <%=
-          Phoenix.HTML.Format.text_to_html(
-            "Elixir Wordle Day ##{ Date.day_of_year(Date.utc_today())}\n"
-            <> feedback_to_emoji(@feedback |> Enum.reverse())
-          )
-        %>
+          <%= Phoenix.HTML.Format.text_to_html(
+            "Elixir Wordle Day ##{Date.day_of_year(Date.utc_today())}\n" <>
+              feedback_to_emoji(@feedback |> Enum.reverse())
+          ) %>
         </div>
 
         <div class="text-center p-4 pb-8">
@@ -34,10 +32,7 @@ defmodule ElixirWordleWeb.Results do
             <p class="text-xl pl-4"><%= time_left_to_next_word(@current_time) %></p>
           </div>
           <div>
-            <.button
-              class="m-2"
-              phx-click={JS.dispatch("elixir_wordle:clipcopy", to: "#emoji-board")}
-            >
+            <.button class="m-2" phx-click={JS.dispatch("elixir_wordle:clipcopy", to: "#emoji-board")}>
               Copy & share
             </.button>
           </div>
