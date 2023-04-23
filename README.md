@@ -1,5 +1,11 @@
 # Elixir Wordle
+You can see the deployment result of main branch on:
 
+<a href="https://elixir-wordle.fly.dev/">
+<img src="https://img.shields.io/badge/-Elixir%20Wordle-purple"
+alt="Visit the web">
+</a>
+            
 ## Table of contents
 
 1. [Game description](#game-description)
@@ -42,6 +48,7 @@ CLUE: "Datatype"
 5. Visit [`localhost:4000`](http://localhost:4000).
 
 ### Tools used
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 
 The following tools were used in the development of this project:
 
@@ -60,6 +67,8 @@ For additional information about the design, please visit the following [link](.
 ## Contributing
 
 We value your contributions to this project. If you have suggestions for new features or encounter any bugs, please open an [issue](https://github.com/IciaCarroBarallobre/elixir_wordle/issues) or [fork](https://github.com/IciaCarroBarallobre/elixir_wordle/forks) the project and then submit a pull request.
+
+[![GitHub issues by-label](https://img.shields.io/github/issues/badges/shields/good%20first%20issue)](https://github.com/badges/shields/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 
 ## Contributors
 
