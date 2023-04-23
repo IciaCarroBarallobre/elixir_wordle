@@ -28,7 +28,7 @@ let csrfToken = document
   .getAttribute('content');
 
 let liveSocket = new LiveSocket('/live', Socket, {
-  hooks: {KeyboardPress},
+  hooks: { KeyboardPress },
   params: { _csrf_token: csrfToken },
   dom: {
     onBeforeElUpdated(from, to) {
@@ -56,17 +56,17 @@ window.liveSocket = liveSocket;
 
 //Copy to clipboard
 window.addEventListener("elixir_wordle:clipcopy", (event) => {
-  if ("clipboard" in navigator) {
-    const text = event.target.textContent.replace(/^\s+|\s+$/gm, '');
+  const text = event.target.textContent.replace(/^\s+|\s+$/gm, '');
 
-    if (navigator.share && navigator.canShare(shareData)) {
-      navigator.share({ text: text, url: window.location.href })
-        .then(() => console.log('Successful share'))
-        .catch((error) => console.log('Error sharing', error));
-    } else {
-      navigator.clipboard.writeText(text + '\n\n' + window.location.href);
-    }
-
+  if (navigator.share) {
+    navigator.share({
+      text: text,
+      url: window.location.href ,
+    })
+      .then(() => console.log('Successful share'))
+      .catch((error) => console.log('Error sharing', error));
+  } else if ("clipboard" in navigator) {
+    navigator.clipboard.writeText(text + '\n\n' + window.location.href);
   } else {
     alert("Sorry, your browser does not support clipboard copy.");
   }
