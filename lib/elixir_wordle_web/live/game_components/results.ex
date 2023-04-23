@@ -1,5 +1,6 @@
 defmodule ElixirWordleWeb.Results do
   use ElixirWordleWeb, :live_component
+  alias Phoenix.LiveView.JS
 
   @moduledoc """
     Results of the game board.
@@ -11,26 +12,34 @@ defmodule ElixirWordleWeb.Results do
       <.modal id={"#{@id}"} show={@show}>
         <:title><%= (@win? && "Congrats! You won ✌️") || "Oh no, you lost 😖" %></:title>
 
-        <div class="mx-auto text-center my-8">
-          <%= for word_feedback <- @feedback |> Enum.reverse() do %>
-            <%= for letter_feedback <- word_feedback,
-                    do: feedback_to_emoji(letter_feedback),
-                    into: "" %>
-            <br />
-          <% end %>
+        <div id="emoji-board" class="mx-auto text-center mt-8 mb-4 text-lg text-purple pb-2">
+        <%=
+          Phoenix.HTML.Format.text_to_html(
+            "Elixir Wordle Day ##{ Date.day_of_year(Date.utc_today())}\n"
+            <> feedback_to_emoji(@feedback |> Enum.reverse())
+          )
+        %>
         </div>
 
-        <p class="text-center text-lg text-purple">
-          Answer is <b><%= String.upcase(@word) %></b>
-        </p>
-
-        <div class="text-zinc-600 ">
-          <div class="px-4 mx-4 p-2 mt-2 text-base leading-6 m-4 ">
+        <div class="text-center p-4 pb-8">
+          <p class="text-lg text-purple pb-2">Answer is <b><%= String.upcase(@word) %></b></p>
+          <div class="text-base leading-6 ">
             <p><b> Do you know that... </b> <%= @description %></p>
           </div>
-          <div class=" shadow-lg text-lg m-4 px-6 py-2  leading-6 text-center mx-auto rounded-md bg-light_purple w-fit text-white ">
-            <p>Next word in</p>
-            <p class="text-xl"><%= time_left_to_next_word(@current_time) %></p>
+        </div>
+
+        <div class="flex flex-wrap justify-center items-center gap-x-8 md:gap-x-16 ">
+          <div>
+            <p class="text-lg">Next word</p>
+            <p class="text-xl pl-4"><%= time_left_to_next_word(@current_time) %></p>
+          </div>
+          <div>
+            <.button
+              class="m-2"
+              phx-click={JS.dispatch("elixir_wordle:clipcopy", to: "#emoji-board")}
+            >
+              Copy & share
+            </.button>
           </div>
         </div>
       </.modal>
@@ -38,9 +47,16 @@ defmodule ElixirWordleWeb.Results do
     """
   end
 
-  defp feedback_to_emoji(:match), do: "⬛"
-  defp feedback_to_emoji(:letter_match), do: "🟪"
-  defp feedback_to_emoji(_), do: "⬜"
+  defp feedback_to_emoji(feedback) do
+    for word_f <- feedback do
+      for(letter_f <- word_f, do: letter_feedback_to_emoji(letter_f), into: "")
+    end
+    |> Enum.join("\n")
+  end
+
+  defp letter_feedback_to_emoji(:match), do: "⬛"
+  defp letter_feedback_to_emoji(:letter_match), do: "🟪"
+  defp letter_feedback_to_emoji(_), do: "⬜"
 
   defp time_left_to_next_word(current_time) do
     n = %{current_time | day: current_time.day + 1, hour: 0, minute: 0, second: 0}

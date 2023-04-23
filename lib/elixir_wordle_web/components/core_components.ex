@@ -17,8 +17,8 @@ defmodule ElixirWordleWeb.CoreComponents do
   @doc """
   Renders a footer
   """
-  attr :name, :string, required: true
-  attr :footer_items, :list, required: true
+  attr(:name, :string, required: true)
+  attr(:footer_items, :list, required: true)
 
   def footer(assigns) do
     ~H"""
@@ -39,14 +39,15 @@ defmodule ElixirWordleWeb.CoreComponents do
   @doc """
   Renders icons dynamically
   """
-  attr :rest, :global,
+  attr(:rest, :global,
     doc: "the arbitrary HTML attributes for the svg container",
     include: ~w(fill stroke stroke-width)
+  )
 
-  attr :name, :atom, required: true
-  attr :outline, :boolean, default: true
-  attr :solid, :boolean, default: false
-  attr :mini, :boolean, default: false
+  attr(:name, :atom, required: true)
+  attr(:outline, :boolean, default: true)
+  attr(:solid, :boolean, default: false)
+  attr(:mini, :boolean, default: false)
 
   def icon(assigns), do: apply(Heroicons, assigns.name, [assigns])
 
@@ -104,7 +105,7 @@ defmodule ElixirWordleWeb.CoreComponents do
 
   def modal(assigns) do
     ~H"""
-    <div id={@id} phx-mounted={@show && show_modal(@id)} class="relative z-50 hidden">
+    <div id={@id} phx-mounted={@show && show_modal(@id)} class="relative z-50 hidden text-zinc-600">
       <div id={"#{@id}-bg"} class="fixed inset-0 bg-zinc-50/90 transition-opacity" aria-hidden="true" />
       <div
         class="fixed inset-0 overflow-y-auto"
@@ -281,8 +282,9 @@ defmodule ElixirWordleWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "phx-submit-loading:opacity-75 rounded-lg bg-purple hover:bg-light_purple py-2 px-3",
+        "font-semibold leading-6 text-white active:text-white/80",
+        "outline-none focus-visible:outline focus-visible:outline-offset-0 focus-visible:outline-dark_purple ",
         @class
       ]}
       {@rest}

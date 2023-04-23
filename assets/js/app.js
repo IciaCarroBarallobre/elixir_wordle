@@ -53,3 +53,21 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+
+//Copy to clipboard
+window.addEventListener("elixir_wordle:clipcopy", (event) => {
+  if ("clipboard" in navigator) {
+    const text = event.target.textContent.replace(/^\s+|\s+$/gm, '');
+
+    if (navigator.share && navigator.canShare(shareData)) {
+      navigator.share({ text: text, url: window.location.href })
+        .then(() => console.log('Successful share'))
+        .catch((error) => console.log('Error sharing', error));
+    } else {
+      navigator.clipboard.writeText(text + '\n\n' + window.location.href);
+    }
+
+  } else {
+    alert("Sorry, your browser does not support clipboard copy.");
+  }
+});
