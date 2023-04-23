@@ -3,6 +3,7 @@ You can see the deployment result of main branch on:
 
 [![ElixirWordle](https://img.shields.io/badge/elixir_wordle_link-%23990599.svg?style=for-the-badge)](https://elixir-wordle.fly.dev/)
 
+[![GitHub version](https://badge.fury.io/gh/IciaCarroBarallobre%2Felixir_wordle.svg)](https://github.com/IciaCarroBarallobre/elixir_wordle)
 ## Table of contents
 
 1. [Game description](#game-description) 🎲
@@ -71,7 +72,8 @@ For additional [documentation about the design](./docs/design.md) like:
 
 [![GitHub issues](https://img.shields.io/github/issues/IciaCarroBarallobre/elixir_wordle.svg)](https://GitHub.com/IciaCarroBarallobre/elixir_wordle/issues/)
 [![GitHub issues by-label](https://img.shields.io/github/issues/IciaCarroBarallobre/elixir_wordle/good%20first%20issue)](https://github.com/IciaCarroBarallobre/elixir_wordle/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
-[![GitHub forks](https://badgen.net/github/forks/IciaCarroBarallobre/elixir_wordle/)](https://GitHub.com/IciaCarroBarallobre/elixir_wordle/network/)
+
+[![GitHub forks](https://img.shields.io/github/forks/IciaCarroBarallobre/elixir_wordle.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/IciaCarroBarallobre/elixir_wordle/network/)
 
 ## Contributors
 
