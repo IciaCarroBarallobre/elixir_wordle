@@ -61,12 +61,17 @@ window.addEventListener("elixir_wordle:clipcopy", (event) => {
   if (navigator.share) {
     navigator.share({
       text: text,
-      url: window.location.href ,
+      url: window.location.href,
     })
       .then(() => console.log('Successful share'))
       .catch((error) => console.log('Error sharing', error));
   } else if ("clipboard" in navigator) {
     navigator.clipboard.writeText(text + '\n\n' + window.location.href);
+
+    let el = document.getElementById("clipcopyinfo");
+    el.classList.replace("hidden", "block");
+    setTimeout(function(){ el.classList.replace("block", "hidden"); }, 5000);
+
   } else {
     alert("Sorry, your browser does not support clipboard copy.");
   }

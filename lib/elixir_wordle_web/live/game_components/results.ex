@@ -35,6 +35,7 @@ defmodule ElixirWordleWeb.Results do
             <.button class="m-2" phx-click={JS.dispatch("elixir_wordle:clipcopy", to: "#emoji-board")}>
               Copy & share
             </.button>
+            <p id="clipcopyinfo" class="hidden mr-4 fixed">Copied!</p>
           </div>
         </div>
       </.modal>
