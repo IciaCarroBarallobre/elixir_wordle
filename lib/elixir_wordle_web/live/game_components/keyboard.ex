@@ -19,7 +19,8 @@ defmodule ElixirWordleWeb.Keyboard do
   def render(assigns) do
     ~H"""
     <div
-      class=" xl:w-2/3 md:w-4/5 mx-auto w-full px-2 mb-5 "
+      class="mx-auto mb-5 min-w-max
+      w-full xl:w-2/3 md:w-4/5"
       aria-label="Keyboard"
       x-data="{
         keyValue: '',
@@ -42,9 +43,11 @@ defmodule ElixirWordleWeb.Keyboard do
           <%= for key <- keyboard_line do %>
             <button
               class={
-                  "text-gray-800 bg-slate-200 hover:bg-slate-400 active:bg-slate-300
-                  font-semibold sm:text-lg uppercase text-center
-                  py-3 rounded focus:ring focus:outline-none
+                  " bg-slate-200 hover:bg-slate-400 active:bg-slate-300
+                  font-semibold uppercase text-center text-gray-800
+                  text-base sm:text-lg
+                  py-3 rounded min-w-max
+                  focus:ring focus:outline-none
                   #{if key in ["Enter"], do: "col-span-2"}"
               }
               id={"keyboard-#{key}"}

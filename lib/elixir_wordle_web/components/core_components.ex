@@ -63,7 +63,7 @@ defmodule ElixirWordleWeb.CoreComponents do
         <button
           id={"button-#{modal_id}"}
           phx-click={show_modal(modal_id)}
-          class={" #{displayed || "hidden"} rounded-md mx-1 md:mx-3"}
+          class={"#{displayed || "hidden"} rounded-md mx-1 md:mx-3"}
         >
           <.icon name={icon} solid={true} class="h-6 w-6 md:w-8 md:h-8 text-darkest_purple" />
         </button>

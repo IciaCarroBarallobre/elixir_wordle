@@ -113,7 +113,8 @@ defmodule ElixirWordleWeb.WordleLive do
     ~H"""
     <%= menu_panel(assigns) %>
 
-    <p class="bg-slate-100 rounded adjust-content text-center mt-2 xl:w-2/3 md:w-4/5 mx-auto w-full px-2 mb-5 ">
+    <p class="bg-slate-100 rounded adjust-content text-center mx-auto mt-2 mb-5
+     w-full xl:w-2/3 md:w-4/5">
       Play a version of Wordle where <strong> all <br /> the words are related to Elixir</strong>.
     </p>
 
@@ -141,10 +142,8 @@ defmodule ElixirWordleWeb.WordleLive do
       </div>
     <% end %>
 
-    <p
-      class="adjust-content mx-auto text-center my-6 mt-2 xl:w-2/3 md:w-4/5 w-full px-2 mb-5 adjust-content"
-      id="clue"
-    >
+    <p id="clue" class="adjust-content mx-auto text-center my-6 mt-4
+       w-full xl:w-2/3 md:w-4/5">
       Clue: <strong><%= @clue %></strong>
     </p>
 

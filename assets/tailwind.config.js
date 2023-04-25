@@ -44,7 +44,7 @@ module.exports = {
           '50%': { transform: 'scale(1.1)' }
         },
         'flip': {
-          '0%': { transform: 'scaleY(1)'},
+          '0%': { transform: 'scaleY(1)' },
           '50%': { transform: 'scaleY(0)', 'background-color': 'transparent', 'border-color': 'transparent' },
           '100%': { transform: 'scaleY(1)' },
 
@@ -76,5 +76,16 @@ module.exports = {
         { "animate-delay": (value) => { return { "animation-delay": value } } },
         { values: theme("transitionDelay") });
     })
-  ]
+  ],
+  safelist: [
+    "animate-delay-150",
+    "animate-delay-300",
+    "animate-delay-450",
+    "animate-delay-600",
+    "animate-delay-750",
+    "animate-delay-900",
+    "animate-delay-1050",
+    "animate-delay-1200"
+
+  ],
 }
