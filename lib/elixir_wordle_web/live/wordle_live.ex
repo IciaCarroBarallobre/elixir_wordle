@@ -101,6 +101,7 @@ defmodule ElixirWordleWeb.WordleLive do
           id="inputs-board"
           attempts={@game.attempts}
           columns={String.length(@game.answer)}
+          end?={Wordle.is_end?(@game)}
         />
       </div>
     <% else %>

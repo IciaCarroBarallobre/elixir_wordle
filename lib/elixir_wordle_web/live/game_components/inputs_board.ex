@@ -7,6 +7,7 @@ defmodule ElixirWordleWeb.InputsBoard do
   attr(:id, :string, required: true)
   attr(:attempts, :integer, required: true)
   attr(:columns, :integer, required: true)
+  attr(:end?, :boolean)
 
   @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
@@ -17,8 +18,10 @@ defmodule ElixirWordleWeb.InputsBoard do
           <%= for j <- 1..@columns do %>
             <div
               id={"input-#{i}-#{j}"}
-              class="font-semibold text-xl uppercase text-center text-gray-800
-               rounded p-2 border-2 min-h-[3rem] border-slate-300"
+              class={"font-semibold text-xl uppercase text-center text-gray-800
+               rounded p-2 border-2 min-h-[3rem] border-slate-300
+               #{@end? && " bg-slate-50"}"
+               }
             >
               <%= "\s" %>
             </div>
