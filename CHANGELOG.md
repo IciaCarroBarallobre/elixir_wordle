@@ -18,14 +18,14 @@
 
 ### Backend
 
-- Implemented the Wordle logic for feedback and for getting the words.
-- Added words contexts and schema.
+- Implemented the Wordle logic for handling a play, including attempts, guesses and feedback, ends, etc.
+- Added words contexts and schema, where the retrieve word logic is implemented.
 - DB seeding.
 
 ### Tests
 
 - Added a test for backend word context.
-- Added a test for frontend flow.
+- Added a test for frontend flow, doing a mock for words context.
 - Implemented Wallaby end-to-end tests.
 
 ### Documentation
