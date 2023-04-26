@@ -1,1 +1,1 @@
-Mox.defmock(ElixirWordle.MockWordleAPI, for: ElixirWordle.WordleAPI)
+Mox.defmock(ElixirWordle.MockWordsAPI, for: ElixirWordle.WordsAPI)

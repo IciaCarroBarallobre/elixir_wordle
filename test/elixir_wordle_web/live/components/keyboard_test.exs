@@ -18,8 +18,8 @@ defmodule ElixirWordleWeb.KeyboardTest do
 
   @tag :wallaby
   feature "JS Client test: screen keyboard works with inputs", %{session: session} do
-    ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
+    ElixirWordle.MockWordsAPI
+    |> expect(:get_todays_word, 2, fn -> {:ok, @word_info} end)
 
     session
     |> visit("/")
@@ -29,8 +29,8 @@ defmodule ElixirWordleWeb.KeyboardTest do
 
   @tag :wallaby
   feature "JS Client test: external keyboard linked to screen keyboard", %{session: session} do
-    ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
+    ElixirWordle.MockWordsAPI
+    |> expect(:get_todays_word, 2, fn -> {:ok, @word_info} end)
 
     session |> visit("/") |> send_keys([:B]) |> assert_text(Query.css("#input-1-1"), "B")
   end

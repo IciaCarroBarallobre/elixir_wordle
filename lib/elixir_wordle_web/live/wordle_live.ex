@@ -2,101 +2,68 @@ defmodule ElixirWordleWeb.WordleLive do
   use ElixirWordleWeb, :live_view
   import ElixirWordleWeb.ErrorComponents
 
-  @max_attempts 6
-  @wordle Application.compile_env(:elixir_wordle, :wordle_api, ElixirWordle.Wordle)
+  alias ElixirWordle.Wordle
+
+  @words Application.compile_env(:elixir_wordle, :words_api, ElixirWordle.Words)
 
   defguard is_valid_size?(word) when byte_size(word) > 2 and byte_size(word) < 9
 
   def new_game(socket) do
     schedule(:next_word)
 
-    socket =
-      socket
-      |> assign(
-        is_valid_word?: false,
-        ends?: false,
-        win?: false
-      )
-
-    case @wordle.get_word_info() do
-      {:ok, %{word: answer, clue: clue, description: description}}
-      when is_valid_size?(answer) ->
+    case @words.get_todays_word() do
+      {:ok, %{word: word, clue: clue, description: desc}} when is_valid_size?(word) ->
         socket
         |> assign(
           is_valid_word?: true,
-          answer: answer,
-          clue: clue,
-          description: description,
-          guesses: [],
-          attempts: @max_attempts,
-          message: nil
+          game: %Wordle{answer: word, clue: clue, description: desc},
+          msg: nil
         )
-        |> push_event("new_attempt", %{attempts: true})
-        |> push_event("set_length", %{length: String.length(answer)})
+        |> push_event("new_attempt", %{length: String.length(word)})
 
       _ ->
         socket
         |> assign(
-          clue: "Today's word is not available",
-          image_error_msg: "Word not available",
-          attempts: 0,
-          is_valid_word?: false
+          is_valid_word?: false,
+          msg: "Today's word is not available",
+          game: nil,
+          err_img: "Word not available"
         )
-        |> push_event("new_attempt", %{attempts: false})
+        |> push_event("no_more_attempts", %{})
     end
   end
 
   def mount(_params, _session, socket) do
     schedule(:update_clock)
-
     {:ok, socket |> new_game() |> assign(current_time: DateTime.utc_now())}
   end
 
-  def handle_event("submit", %{"guess" => _guess}, %{assigns: %{attempts: 0}} = socket),
-    do: {:noreply, assign(socket, message: "There aren't more attempts")}
+  def handle_event("submit", %{"guess" => guess}, %{assigns: %{game: old_game}} = socket) do
+    case Wordle.play(old_game, guess) do
+      {:ok, game} ->
+        if Wordle.is_end?(game) do
+          schedule(:ends)
 
-  def handle_event("submit", %{"guess" => guess}, %{assigns: %{answer: answer}} = socket)
-      when byte_size(answer) > byte_size(guess),
-      do: {:noreply, assign(socket, message: "Not enough letters")}
+          {
+            :noreply,
+            socket
+            |> assign(game: game, msg: "You #{(game.win? && "won") || "lost"} !")
+            |> push_event("no_more_attempts", %{})
+          }
+        else
+          {
+            :noreply,
+            socket
+            |> assign(game: game)
+            |> push_event("new_attempt", %{length: String.length(game.answer)})
+          }
+        end
 
-  def handle_event(
-        "submit",
-        %{"guess" => guess},
-        %{assigns: %{attempts: attempts, guesses: guesses, answer: answer}} = socket
-      ) do
-    guess = guess |> trim(String.length(answer))
-
-    with {:ok, %{guess: guess, feedback: feedback}} <- @wordle.feedback(guess, answer),
-         win? <- Enum.all?(feedback, fn x -> x == :match end),
-         lost? <- Enum.any?(feedback, fn x -> x != :match end) and attempts == 1 do
-      if win? or lost? do
-        Process.send_after(self(), :ends, get_ends_modal_delay())
-
-        {
-          :noreply,
-          socket
-          |> assign(
-            guesses: fill_guesses([{guess, feedback} | guesses], attempts - 1),
-            attempts: 0,
-            message: "You #{(win? && "won") || "lost"} !",
-            win?: win?
-          )
-          |> push_event("new_attempt", %{attempts: false})
-        }
-      else
-        {
-          :noreply,
-          socket
-          |> assign(guesses: [{guess, feedback} | guesses], attempts: attempts - 1)
-          |> push_event("new_attempt", %{attempts: true})
-        }
-      end
-    else
-      {:error, error_msg} ->
-        {:noreply, socket |> assign(message: %{error: error_msg})}
+      {:error, msg} ->
+        {:noreply, socket |> assign(msg: msg)}
 
       _ ->
-        {:noreply, socket |> assign(message: %{error: "Error"})}
+        {:noreply, socket |> assign(msg: "Error")}
     end
   end
 
@@ -120,31 +87,31 @@ defmodule ElixirWordleWeb.WordleLive do
 
     <%= if @is_valid_word? do %>
       <div id="board" class=" grid grid-cols-1 gap-y-1 relative">
-        <.live_component module={ElixirWordleWeb.PopupOfBoard} id="warningMessage" message={@message} />
+        <.live_component module={ElixirWordleWeb.PopupOfBoard} id="warningMessage" message={@msg} />
 
         <.live_component
           module={ElixirWordleWeb.GuessesBoard}
           id="guesses-board"
-          columns={String.length(@answer)}
-          guesses={@guesses}
+          columns={String.length(@game.answer)}
+          guesses={@game.guesses}
         />
 
         <.live_component
           module={ElixirWordleWeb.InputsBoard}
           id="inputs-board"
-          attempts={@attempts}
-          columns={String.length(@answer)}
+          attempts={@game.attempts}
+          columns={String.length(@game.answer)}
         />
       </div>
     <% else %>
       <div id="error" class="mx-auto space-y-1 max-w-xs w-4/5">
-        <.image_error text={@image_error_msg} id="image_error" />
+        <.image_error text={@err_img} id="image_error" />
       </div>
     <% end %>
 
     <p id="clue" class="adjust-content mx-auto text-center my-6 mt-4
        w-full xl:w-2/3 md:w-4/5">
-      Clue: <strong><%= @clue %></strong>
+      Clue: <strong><%= if is_nil(@game), do: @msg, else: @game.clue %></strong>
     </p>
 
     <.live_component module={ElixirWordleWeb.Keyboard} id="keyboard" />
@@ -154,19 +121,19 @@ defmodule ElixirWordleWeb.WordleLive do
   def menu_panel(assigns) do
     ~H"""
     <.panel buttons_info={[
-      {"results", :chart_bar, @ends?},
+      {"results", :chart_bar, if(@game, do: Wordle.is_end?(@game), else: false)},
       {"wordle-rules", :question_mark_circle, true}
     ]} />
 
     <.live_component module={ElixirWordleWeb.Rules} id="wordle-rules" />
-    <%= if @ends? do %>
+    <%= if not is_nil(@game) and Wordle.is_end?(@game) do %>
       <.live_component
         module={ElixirWordleWeb.Results}
         id="results"
-        word={@answer}
-        description={@description}
-        win?={@win?}
-        feedback={get_guesses_feedback(@guesses)}
+        word={@game.answer}
+        description={@game.description}
+        win?={@game.win?}
+        feedback={get_feedback(@game.guesses)}
         show={true}
         current_time={@current_time}
       />
@@ -174,15 +141,14 @@ defmodule ElixirWordleWeb.WordleLive do
     """
   end
 
-  defp fill_guesses(guesses, 0), do: guesses
+  defp get_feedback(guesses), do: for({_word, feedback} <- guesses, do: feedback)
 
-  defp fill_guesses([{guess, _feedback} | _t] = guesses, attempts) when attempts > 0 do
-    word = for _i <- 1..String.length(guess), do: " ", into: ""
-    fill_guesses([{word, nil} | guesses], attempts - 1)
-  end
+  defp schedule(:next_word),
+    do: Process.send_after(self(), :next_word, get_ms_for_tomorrow() + 2000)
 
-  defp get_guesses_feedback(guesses),
-    do: for({_guess, feedback} <- guesses, not is_nil(feedback), do: feedback)
+  defp schedule(:update_clock), do: Process.send_after(self(), :update_clock, 1000)
+
+  defp schedule(:ends), do: Process.send_after(self(), :ends, get_ends_modal_delay())
 
   defp get_ends_modal_delay, do: Application.get_env(:elixir_wordle, :end_delay, 1700)
 
@@ -191,11 +157,4 @@ defmodule ElixirWordleWeb.WordleLive do
     tomorrow = %{today | day: today.day + 1, hour: 0, minute: 0, second: 0}
     DateTime.diff(tomorrow, today) * 1000
   end
-
-  defp trim(word, length), do: word |> String.slice(0..(length - 1))
-
-  defp schedule(:next_word),
-    do: Process.send_after(self(), :next_word, get_ms_for_tomorrow() + 2000)
-
-  defp schedule(:update_clock), do: Process.send_after(self(), :update_clock, 1000)
 end

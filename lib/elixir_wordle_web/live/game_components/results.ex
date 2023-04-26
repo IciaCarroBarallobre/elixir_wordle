@@ -35,11 +35,14 @@ defmodule ElixirWordleWeb.Results do
             <p class="text-lg">Next word</p>
             <p class="text-xl pl-4"><%= time_left_to_next_word(@current_time) %></p>
           </div>
-          <div>
-            <.button class="m-2" phx-click={JS.dispatch("elixir_wordle:clipcopy", to: "#emoji-board")}>
+          <div class="p-4">
+            <.button
+              class="my-2"
+              phx-click={JS.dispatch("elixir_wordle:clipcopy", to: "#emoji-board")}
+            >
               Copy & share
             </.button>
-            <p id="clipcopyinfo" class="hidden mr-4 fixed">Copied!</p>
+            <p id="clipcopyinfo" class="hidden pl-10 fixed">Copied!</p>
           </div>
         </div>
       </.modal>

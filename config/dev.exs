@@ -78,4 +78,4 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # Behaviour for Wordle
-config :elixir_wordle, :wordle_api, ElixirWordle.Wordle
+config :elixir_wordle, :words_api, ElixirWordle.Words

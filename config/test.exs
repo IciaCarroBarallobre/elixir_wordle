@@ -31,7 +31,7 @@ config :wallaby,
   screenshot_dir: "docs/images/screenshots"
 
 # Behaviour for Wordle
-config :elixir_wordle, :wordle_api, ElixirWordle.MockWordleAPI
+config :elixir_wordle, :words_api, ElixirWordle.MockWordsAPI
 
 # End results delay to 0
 config :elixir_wordle, :end_delay, 0

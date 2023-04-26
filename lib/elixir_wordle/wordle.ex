@@ -1,35 +1,79 @@
 defmodule ElixirWordle.Wordle do
-  alias ElixirWordle.Words
-  alias ElixirWordle.Words.Word
-  @behaviour ElixirWordle.WordleAPI
-  @avaliable_words 91
-
   @moduledoc """
-  Wordle Module can check how many exact matches, same position and letter,
-  occurrences, same letter, or no matches are between a word (``answer``)
-  and another word (``guess``). Uppercase and lowercase do not matter at all.
-  - Exact matches => ``:match``
-  - Matches/Occurrences => ``:letter_match``
-  - No matches => ``:fail``
-  Prioritizing exact matches, and then, prioritizing first appearances.
-  Both words have to contains same length and use only UTF-8 characters.
+  The Wordle module allow you to `play/2` wordle giving a game struct and a guess.
+  The `%Wordle{}` game struct requires the `answer` to the word to be guessed.
+  By default, the number of `attempts` allowed is 6.
+
+  As the player makes guesses, the game structure accumulates them along with feedback.
+  Feedback is provided in three categories:
+  - `:match` when the current letter matches in its position,
+  - `:letter_match` when the current letter occurs in the answer but in a different position,
+  - `:fail` when the current letter is not present in the answer at all.
+
+  The game ends either when the player runs out of attempts or
+  when they successfully guess the answer.
+
+  ## Examples
+
+   iex> Wordle.play(%Wordle{answer: "ay"}, "ay")
+   {:ok,
+   %ElixirWordle.Wordle{
+     answer: "ay",
+     clue: nil,
+     description: nil,
+     win?: true,
+     guesses: [{"ay", [:match, :match]}],
+     attempts: 5
+   }}
+
+   iex> Wordle.play(%ElixirWordle.Wordle{answer: "example"}, "ey")
+   {:error, "Not enough letters"}
+
+   iex> Wordle.play(%Wordle{answer: "ay", win?: true}, "ey")
+   {:error, "There aren't more attempts"}
+
+   iex> Wordle.play(%Wordle{answer: "ay", attempts: 0}, "yy")
+   {:error, "There aren't more attempts"}
   """
 
-  @impl ElixirWordle.WordleAPI
-  def get_word_info() do
-    id = rem(Date.day_of_year(Date.utc_today()), @avaliable_words)
+  @enforce_keys [:answer]
+  defstruct [:answer, :clue, :description, win?: false, guesses: [], attempts: 6]
+  defguard is_end?(attempts, win) when attempts == 0 or win
 
-    case Words.get_word(id) do
-      %Word{word: word, clue: clue, description: description} ->
-        {:ok, %{word: word, clue: clue, description: description}}
+  defguard is_bigger?(guess, answer) when byte_size(guess) > byte_size(answer)
+  defguard is_smaller?(guess, answer) when byte_size(guess) < byte_size(answer)
+  defguard are_string?(guess, answer) when is_binary(guess) and is_binary(answer)
+
+  def play(%{attempts: attempts, win?: win}, _guess) when is_end?(attempts, win),
+    do: {:error, "There aren't more attempts"}
+
+  def play(game, guess) do
+    case feedback(guess, game.answer) do
+      {:ok, %{guess: guess, feedback: guess_feedback}} ->
+        {
+          :ok,
+          %{
+            game
+            | guesses: [{guess, guess_feedback} | game.guesses],
+              attempts: game.attempts - 1,
+              win?: is_win?(guess_feedback)
+          }
+        }
+
+      {:error, msg} ->
+        {:error, msg}
 
       _ ->
-        {:error, "Word not available"}
+        {:error, "Error"}
     end
   end
 
-  @impl ElixirWordle.WordleAPI
-  def feedback(guess, answer)
+  def is_end?(game), do: is_end?(game.attempts, game.win?)
+
+  def is_lost?(game), do: game.attempts == 0 and not game.win?
+
+  def is_win?(feedback),
+    do: Enum.all?(feedback, fn letter_feedback -> letter_feedback == :match end)
 
   @doc """
   Compare answer with a guess.
@@ -52,28 +96,33 @@ defmodule ElixirWordle.Wordle do
       {:error, "Both arguments have to be strings."}
 
       iex> Wordle.feedback("greed", "aaaaaaaaaaaaaaaaaa")
-      {:error, "Guess and answer must have the same number of letters."}
+      {:error, "Not enough letters"}
+
+      iex> Wordle.feedback("aaaaaaaaaaaaaaaaaa", "greed")
+      {:error, "Too many letters"}
   """
-  def feedback(guess, answer) when is_binary(guess) and is_binary(answer) do
+  def feedback(guess, answer) when are_string?(guess, answer) and is_bigger?(guess, answer),
+    do: {:error, "Too many letters"}
+
+  def feedback(guess, answer) when are_string?(guess, answer) and is_smaller?(guess, answer),
+    do: {:error, "Not enough letters"}
+
+  def feedback(guess, answer) when are_string?(guess, answer) do
     answer_list = answer |> String.downcase() |> String.to_charlist()
     guess_list = guess |> String.downcase() |> String.to_charlist()
 
-    if String.length(answer) == String.length(guess) do
-      result =
-        guess_list
-        |> check_matches(answer_list)
-        |> check_occurrences(answer_list)
-        |> no_matches()
-
-      {:ok, %{guess: guess, feedback: result}}
-    else
-      {:error, "Guess and answer must have the same number of letters."}
-    end
+    {:ok,
+     %{
+       guess: guess,
+       feedback:
+         guess_list
+         |> check_matches(answer_list)
+         |> check_occurrences(answer_list)
+         |> no_matches()
+     }}
   end
 
-  def feedback(_guess, _answer) do
-    {:error, "Both arguments have to be strings."}
-  end
+  def feedback(_guess, _answer), do: {:error, "Both arguments have to be strings."}
 
   defp check_matches(guess, answer) do
     for {g, a} <- Enum.zip(guess, answer), do: if(g == a, do: :match, else: g)

@@ -19,4 +19,4 @@ config :logger, level: :info
 # of environment variables, is done on config/runtime.exs.
 
 # Behaviour for Wordle
-config :elixir_wordle, :wordle_api, ElixirWordle.Wordle
+config :elixir_wordle, :words_api, ElixirWordle.Words
