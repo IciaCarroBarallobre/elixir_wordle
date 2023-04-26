@@ -6,17 +6,18 @@ export default {
 
     this.el.addEventListener('key-press', (event) => {
       if (this.attempts)
-        this.keyAction(event.detail.key)
+        this.keyAction(event.detail.key);
     });
 
     this.handleEvent("new_attempt", data => {
       this.guess = "";
-      this.attempts = data.attempts;
-      this.current_tile = 1;
+      this.attempts = true;
+      this.current_tile = 1
+      this.answer_length = data.length;
     });
 
-    this.handleEvent("set_length", data => {
-      this.answer_length = data.length;
+    this.handleEvent("no_more_attempts", () => {
+      this.attempts = false;
     });
   },
   keyAction(key) {
@@ -25,7 +26,7 @@ export default {
 
     switch (key) {
       case 'Enter':
-        if ((this.answer_length != undefined) && (this.guess.length < this.answer_length)) {
+        if (this.guess.length < this.answer_length) {
           el.innerHTML = "Not enough letters";
           el.classList.replace("hidden", "block");
         } else {
@@ -45,19 +46,22 @@ export default {
         break;
 
       default:
-        key = key.toUpperCase();
 
-        if ((key >= 'A' && key <= 'Z') && (key.length == 1)) {
-          this.guess = this.guess + key;
+        if (this.guess.length < this.answer_length) {
 
-          try {
-            let el = document.getElementById("input-1-" + this.current_tile);
-            el.classList.replace("border-slate-300", "border-light_purple");
-            el.classList.toggle("animate-pop")
-            el.innerHTML = key;
+          key = key.toUpperCase();
 
-            this.current_tile = this.current_tile + 1;
-          } catch (TypeError) {
+          if ((key >= 'A' && key <= 'Z') && (key.length == 1)) {
+            this.guess = this.guess + key;
+
+            try {
+              let el = document.getElementById("input-1-" + this.current_tile);
+              el.classList.replace("border-slate-300", "border-light_purple");
+              el.classList.toggle("animate-pop")
+              el.innerHTML = key;
+              this.current_tile = this.current_tile + 1;
+            } catch (TypeError) {
+            }
           }
         }
         break;

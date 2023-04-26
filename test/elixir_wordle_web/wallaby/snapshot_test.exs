@@ -19,8 +19,8 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
   @tag :wallaby
   feature "wallaby screenshot when answer has a supported length", %{session: session} do
-    ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
+    ElixirWordle.MockWordsAPI
+    |> expect(:get_todays_word, 2, fn -> {:ok, @word_info} end)
 
     home = session |> visit("/")
 
@@ -32,8 +32,8 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
   @tag :wallaby
   feature "wallaby screenshot when answer is unavailable", %{session: session} do
-    ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:error, "Not available"} end)
+    ElixirWordle.MockWordsAPI
+    |> expect(:get_todays_word, 2, fn -> {:error, "Not available"} end)
 
     home = session |> visit("/")
 
@@ -48,8 +48,8 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
   @tag :wallaby
   feature "wallaby screenshot for rules", %{session: session} do
-    ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
+    ElixirWordle.MockWordsAPI
+    |> expect(:get_todays_word, 2, fn -> {:ok, @word_info} end)
 
     home =
       session
@@ -67,13 +67,8 @@ defmodule ElixirWordleWeb.Wallaby.SnapshotTests do
 
   @tag :wallaby
   feature "wallaby screenshot for results", %{session: session} do
-    ElixirWordle.MockWordleAPI
-    |> expect(:get_word_info, 2, fn -> {:ok, @word_info} end)
-
-    ElixirWordle.MockWordleAPI
-    |> expect(:feedback, 1, fn _guess, _answer ->
-      {:ok, %{feedback: [:match, :match, :match, :match, :match, :match], guess: @word_info.word}}
-    end)
+    ElixirWordle.MockWordsAPI
+    |> expect(:get_todays_word, 2, fn -> {:ok, @word_info} end)
 
     word = String.upcase(@word_info.word)
 

@@ -70,7 +70,7 @@ window.addEventListener("elixir_wordle:clipcopy", (event) => {
 
     let el = document.getElementById("clipcopyinfo");
     el.classList.replace("hidden", "block");
-    setTimeout(function(){ el.classList.replace("block", "hidden"); }, 5000);
+    setTimeout(function(){ el.classList.replace("block", "hidden"); }, 1700);
 
   } else {
     alert("Sorry, your browser does not support clipboard copy.");

@@ -4,39 +4,31 @@ defmodule ElixirWordleWeb.GuessesBoard do
   @moduledoc """
     Screen Keyboard (linked to external keyboard)
   """
-  @default_color_system %{
-    match: "bg-purple border-dark_purple text-white ",
-    letter_match: "bg-lightest_purple border-light_purple text-gray-700 ",
-    fail: "bg-slate-100 text-gray-800 "
-  }
 
-  attr :animation, :boolean, default: true
+  attr(:id, :string, required: true)
+  attr(:guesses, :list, required: true)
+  attr(:columns, :integer, required: true)
+  attr(:animation, :boolean, default: true)
+  attr(:class, :string, default: "")
 
   @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
-    <div id={@id} class="mx-auto space-y-1 max-w-xs w-4/5">
+    <div id={@id} class={"mx-auto space-y-1 max-w-xs min-w-max w-full md:w-4/5 #{@class}"}>
       <%= for {word, feedback} <- Enum.reverse(@guesses) do %>
-        <div class={"grid #{grid_cols_tailwind(@columns)} gap-1 "} data-row={"#{word}"}>
-          <%= for {letter, result, number} <- Enum.zip(
-            [
-              word |> String.to_charlist(),
-              (feedback || fill_feedback(word, feedback)),
-              0..(@columns-1)
-            ]
-          ) do %>
+        <div
+          class="grid gap-1"
+          style={"grid-template-columns: repeat(#{@columns}, 1fr)"}
+          data-row={"#{word}"}
+        >
+          <%= for {letter, letter_feedback, n} <- zip_letters_and_feedback(word, feedback) do %>
             <div class={
-              " justify-content
-                font-semibold text-xl uppercase text-center
-                rounded p-2 border-2 min-h-[3rem]
-                #{(not is_filler_feedback(feedback) and @animation) && " animate-flip animate-delay-#{number*150}"}
-                #{wordle_result_to_color_tailwind(result)}
-
-                "
+              "font-semibold text-xl uppercase text-center
+               rounded p-2 border-2 min-h-[3rem]
+               #{feedback_to_color(letter_feedback)}
+               #{(!is_fake_feedback(letter_feedback) and @animation) && " animate-flip  animate-delay-#{n*150}"}"
             }>
-              <!--- animate-delay-150 animate-delay-300 animate-delay-450 animate-delay-600
-            animate-delay-750 animate-delay-900 animate-delay-1050 animate-delay-1200 -->
-              <%= " #{to_string([letter])} " %>
+              <%= [letter] %>
             </div>
           <% end %>
         </div>
@@ -45,23 +37,25 @@ defmodule ElixirWordleWeb.GuessesBoard do
     """
   end
 
-  def grid_cols_tailwind(number) do
-    case number do
-      3 -> "grid-cols-3"
-      4 -> "grid-cols-4"
-      5 -> "grid-cols-5"
-      6 -> "grid-cols-6"
-      7 -> "grid-cols-7"
-      8 -> "grid-cols-8"
-      _ -> ""
+  defp zip_letters_and_feedback(word, feedback),
+    do:
+      Enum.zip([
+        String.to_charlist(word),
+        feedback || fill_fake_feedback(word, feedback),
+        0..String.length(word)
+      ])
+
+  defp feedback_to_color(feedback) do
+    case feedback do
+      :match -> "bg-purple border-dark_purple text-white "
+      :letter_match -> "bg-lightest_purple border-light_purple text-gray-700 "
+      :fail -> "bg-slate-100 border-slate-300 text-gray-800"
+      _ -> "bg-slate-100"
     end
   end
 
-  defp wordle_result_to_color_tailwind(atom, color_system \\ @default_color_system),
-    do: color_system |> Map.get(atom, "bg-slate-100")
-
-  defp fill_feedback(word, feedback) when is_nil(feedback),
+  defp fill_fake_feedback(word, feedback) when is_nil(feedback),
     do: for(_i <- 1..String.length(word), do: :none)
 
-  defp is_filler_feedback(feedback), do: is_nil(feedback)
+  defp is_fake_feedback(feedback), do: :none == feedback
 end

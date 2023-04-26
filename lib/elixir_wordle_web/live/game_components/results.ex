@@ -12,30 +12,37 @@ defmodule ElixirWordleWeb.Results do
       <.modal id={"#{@id}"} show={@show}>
         <:title><%= (@win? && "Congrats! You won ✌️") || "Oh no, you lost 😖" %></:title>
 
-        <div id="emoji-board" class="mx-auto text-center mt-8 mb-4 text-lg text-purple pb-2">
+        <div
+          id="emoji-board"
+          class="w-3/5 mx-auto text-center py-4 my-8 text-dark_purple bg-slate-100 shadow p-2"
+        >
           <%= Phoenix.HTML.Format.text_to_html(
-            "Elixir Wordle Day ##{Date.day_of_year(Date.utc_today())}\n" <>
+            "Elixir Wordle ##{Date.day_of_year(Date.utc_today())}\n" <>
               feedback_to_emoji(@feedback |> Enum.reverse())
           ) %>
         </div>
 
-        <div class="text-center p-4 pb-8">
-          <p class="text-lg text-purple pb-2">Answer is <b><%= String.upcase(@word) %></b></p>
+        <div class="text-center m-2 mb-6">
+          <p class="text-lg text-purple mb-2">Answer is <b><%= String.upcase(@word) %></b></p>
           <div class="text-base leading-6 ">
             <p><b> Do you know that... </b> <%= @description %></p>
           </div>
         </div>
 
-        <div class="flex flex-wrap justify-center items-center gap-x-8 md:gap-x-16 ">
+        <div class="flex flex-wrap justify-center items-center
+         gap-x-8 md:gap-x-16 ">
           <div>
             <p class="text-lg">Next word</p>
             <p class="text-xl pl-4"><%= time_left_to_next_word(@current_time) %></p>
           </div>
-          <div>
-            <.button class="m-2" phx-click={JS.dispatch("elixir_wordle:clipcopy", to: "#emoji-board")}>
+          <div class="p-4">
+            <.button
+              class="my-2"
+              phx-click={JS.dispatch("elixir_wordle:clipcopy", to: "#emoji-board")}
+            >
               Copy & share
             </.button>
-            <p id="clipcopyinfo" class="hidden mr-4 fixed">Copied!</p>
+            <p id="clipcopyinfo" class="hidden pl-10 fixed">Copied!</p>
           </div>
         </div>
       </.modal>
