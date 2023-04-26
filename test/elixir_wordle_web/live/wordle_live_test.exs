@@ -17,8 +17,9 @@ defmodule ElixirWordleWeb.WordleLiveTest do
   @max_attempts 6
 
   describe "mount" do
-    test "when the word cannot be obtained, the word is considered unavailable in the view", %{conn: conn} do
-
+    test "when the word cannot be obtained, the word is considered unavailable in the view", %{
+      conn: conn
+    } do
       ElixirWordle.MockWordsAPI
       |> expect(:get_todays_word, 2, fn -> {:error, "There is an error"} end)
 
@@ -115,7 +116,6 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       render_hook(view, :submit, %{guess: guess})
       refute view |> element("#guesses-board") |> render() =~ guess
       assert view |> element("#warningMessage") |> render() =~ "Too many letters"
-
     end
   end
 
@@ -168,5 +168,4 @@ defmodule ElixirWordleWeb.WordleLiveTest do
       assert view |> has_element?("#button-results")
     end
   end
-
 end
