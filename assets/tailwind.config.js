@@ -6,6 +6,8 @@ const plugin = require("tailwindcss/plugin")
 module.exports = {
   mode: 'jit',
   content: [
+    '../lib/*_web.ex',
+    '../lib/*_web/**/*.*ex',
     "../**/*.html.eex",
     "../**/*.html.leex",
     "../**/*.html.heex",
