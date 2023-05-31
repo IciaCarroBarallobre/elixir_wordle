@@ -2,6 +2,9 @@
 
 ## Version 0.2.0
 
+### Frontend & LiveViewServer
+
+- The next word countdown is initialized when Wordle game ends, rather than in the beginning as it can be a heavy workload.
 - Fixing the issue where creating unrealistic dates, such as adding 1 day to today's date resulting in a date like 32.
 
 ### Documentation

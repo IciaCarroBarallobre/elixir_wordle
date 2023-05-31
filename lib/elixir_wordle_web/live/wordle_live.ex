@@ -33,10 +33,7 @@ defmodule ElixirWordleWeb.WordleLive do
     end
   end
 
-  def mount(_params, _session, socket) do
-    schedule(:update_clock)
-    {:ok, socket |> new_game() |> assign(current_time: DateTime.utc_now())}
-  end
+  def mount(_params, _session, socket), do: {:ok, socket |> new_game()}
 
   def handle_event("submit", %{"guess" => guess}, %{assigns: %{game: old_game}} = socket) do
     case Wordle.play(old_game, guess) do
@@ -48,6 +45,7 @@ defmodule ElixirWordleWeb.WordleLive do
             :noreply,
             socket
             |> assign(game: game, msg: "You #{(game.win? && "won") || "lost"} !")
+            |> assign(current_time: DateTime.utc_now())
             |> push_event("no_more_attempts", %{})
           }
         else
@@ -67,7 +65,10 @@ defmodule ElixirWordleWeb.WordleLive do
     end
   end
 
-  def handle_info(:ends, socket), do: {:noreply, socket |> assign(ends?: true)}
+  def handle_info(:ends, socket) do
+    schedule(:update_clock)
+    {:noreply, socket |> assign(ends?: true)}
+  end
 
   def handle_info(:next_word, socket), do: {:noreply, socket |> new_game()}
 
