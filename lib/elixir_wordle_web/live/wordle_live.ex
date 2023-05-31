@@ -155,7 +155,7 @@ defmodule ElixirWordleWeb.WordleLive do
 
   defp get_ms_for_tomorrow() do
     today = DateTime.utc_now()
-    tomorrow = %{today | day: today.day + 1, hour: 0, minute: 0, second: 0}
+    tomorrow = DateTime.add(DateTime.utc_now(), 1, :day)
     DateTime.diff(tomorrow, today) * 1000
   end
 end
