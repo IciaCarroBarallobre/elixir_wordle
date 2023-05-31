@@ -62,7 +62,7 @@ defmodule ElixirWordleWeb.Results do
   defp letter_feedback_to_emoji(_), do: "⬜"
 
   defp time_left_to_next_word(current_time) do
-    next_day = DateTime.add(current_time, 1, :day)
+    next_day = %{DateTime.add(current_time, 1, :day) | hour: 0, minute: 0, second: 0}
     Time.from_seconds_after_midnight(DateTime.diff(next_day, current_time))
   end
 end
