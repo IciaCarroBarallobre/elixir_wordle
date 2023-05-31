@@ -4,6 +4,10 @@
 
 - Fixing the issue where creating unrealistic dates, such as adding 1 day to today's date resulting in a date like 32.
 
+### Documentation
+
+- Diagrams to Mermaid diagrams 
+
 ## Version 0.1.0
 
 ### Frontend
