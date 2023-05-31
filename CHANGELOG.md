@@ -6,7 +6,7 @@
 
 ### Documentation
 
-- Diagrams to Mermaid diagrams 
+- Diagrams to Mermaid diagrams.
 
 ## Version 0.1.0
 
