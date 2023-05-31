@@ -5,6 +5,9 @@ defmodule ElixirWordleWeb.PopupOfBoard do
     Warnings about the game board.
   """
 
+  attr(:id, :string, required: true)
+  attr(:message, :string, default: nil)
+
   @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""

@@ -6,6 +6,14 @@ defmodule ElixirWordleWeb.Results do
     Results of the game board.
   """
 
+  attr(:id, :string, required: true)
+  attr(:word, :string, required: true)
+  attr(:description, :string, required: true)
+  attr(:win?, :boolean, required: true)
+  attr(:feedback, :list, default: [])
+  attr(:show, :boolean, default: false)
+  attr(:current_time, :any, default: DateTime.utc_now())
+
   def render(assigns) do
     ~H"""
     <div id={"#{@id}-div"}>
@@ -33,7 +41,9 @@ defmodule ElixirWordleWeb.Results do
          gap-x-8 md:gap-x-16 ">
           <div>
             <p class="text-lg">Next word</p>
-            <p class="text-xl pl-4"><%= time_left_to_next_word(@current_time) %></p>
+            <p class="text-xl pl-4" id="next-word-clock">
+              <%= time_left_to_next_word(@current_time) %>
+            </p>
           </div>
           <div class="p-4">
             <.button
