@@ -5,7 +5,7 @@
   2. [Sequence diagram](#sequence-diagram)
 
 - [Mockups](#mockups)
-- [Other ideas](#other-ideas)
+- [Future ideas](#future-ideas)
 
 ## Diagrams
 
@@ -13,13 +13,47 @@
 
 Main flow of the page per each day word:
 
-![Flow Diagram](/docs/images/diagrams/flow_diagram.png)
+```mermaid
+  flowchart LR
+  A(Start) --> B{Attempts is 0?}
+  B ------> |Yes| E(Defeat)
+  B --> |No| D[Try a word]
+  D --> F{Same length as answer?}
+  F --> |Yes| H{Is the answer?}
+  H ----> |yes| I(Win)
+  H --> |No| J[Give feedback]
+  J --> |Attempts--|B
+  F --> |No| G[Invalid word]
+  G --> D
+```
 
 ### Sequence diagram
 
 Main sequence of the page, including layers interaction (browser, endpoints, db):
 
-![Sequence Diagram](/docs/images/diagrams/sequence_diagram.png)
+```mermaid
+sequenceDiagram
+
+    Client->> LVServer: Get / 
+
+    loop Schedule every day
+        LVServer->> Words: get_todays_word/0
+        activate Words
+        Words-->> LVServer: {ok, %{word, clue, description}}
+        deactivate Words
+    end
+
+    LVServer -->> Client: /
+
+    loop Attempts > 0  
+        Client->> LVServer: Submit guess  
+        LVServer ->> Wordle: feedback(guess, word)
+        activate Wordle
+        Wordle -->> LVServer: feedback
+        deactivate Wordle
+        LVServer -->> Client: Guess feedback  
+    end
+```
 
 ## Mockups
 
