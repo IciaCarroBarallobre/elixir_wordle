@@ -17,7 +17,8 @@ defmodule ElixirWordleWeb.WordleLive do
         |> assign(
           is_valid_word?: true,
           game: %Wordle{answer: word, clue: clue, description: desc},
-          msg: nil
+          msg: nil,
+          display_results?: false
         )
         |> push_event("new_attempt", %{length: String.length(word)})
 
@@ -39,13 +40,12 @@ defmodule ElixirWordleWeb.WordleLive do
     case Wordle.play(old_game, guess) do
       {:ok, game} ->
         if Wordle.is_end?(game) do
-          schedule(:ends)
+          schedule(:display_results)
 
           {
             :noreply,
             socket
             |> assign(game: game, msg: "You #{(game.win? && "won") || "lost"} !")
-            |> assign(current_time: DateTime.utc_now())
             |> push_event("no_more_attempts", %{})
           }
         else
@@ -59,15 +59,14 @@ defmodule ElixirWordleWeb.WordleLive do
 
       {:error, msg} ->
         {:noreply, socket |> assign(msg: msg)}
-
-      _ ->
-        {:noreply, socket |> assign(msg: "Error")}
     end
   end
 
-  def handle_info(:ends, socket) do
+  def handle_info(:display_results, socket) do
     schedule(:update_clock)
-    {:noreply, socket |> assign(ends?: true)}
+
+    {:noreply,
+     socket |> assign(current_time: DateTime.utc_now()) |> assign(display_results?: true)}
   end
 
   def handle_info(:next_word, socket), do: {:noreply, socket |> new_game()}
@@ -123,12 +122,12 @@ defmodule ElixirWordleWeb.WordleLive do
   def menu_panel(assigns) do
     ~H"""
     <.panel buttons_info={[
-      {"results", :chart_bar, if(@game, do: Wordle.is_end?(@game), else: false)},
+      {"results", :chart_bar, if(@game, do: @display_results?, else: false)},
       {"wordle-rules", :question_mark_circle, true}
     ]} />
 
     <.live_component module={ElixirWordleWeb.Rules} id="wordle-rules" />
-    <%= if not is_nil(@game) and Wordle.is_end?(@game) do %>
+    <%= if not is_nil(@game) and @display_results? do %>
       <.live_component
         module={ElixirWordleWeb.Results}
         id="results"
@@ -150,9 +149,11 @@ defmodule ElixirWordleWeb.WordleLive do
 
   defp schedule(:update_clock), do: Process.send_after(self(), :update_clock, 1000)
 
-  defp schedule(:ends), do: Process.send_after(self(), :ends, get_ends_modal_delay())
+  defp schedule(:display_results),
+    do: Process.send_after(self(), :display_results, get_display_results_modal_delay())
 
-  defp get_ends_modal_delay, do: Application.get_env(:elixir_wordle, :end_delay, 1700)
+  defp get_display_results_modal_delay,
+    do: Application.get_env(:elixir_wordle, :display_results_delay, 1700)
 
   defp get_ms_for_tomorrow() do
     today = DateTime.utc_now()

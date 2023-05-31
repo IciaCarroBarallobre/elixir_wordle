@@ -12,7 +12,7 @@ defmodule ElixirWordleWeb.Results do
   attr(:win?, :boolean, required: true)
   attr(:feedback, :list, default: [])
   attr(:show, :boolean, default: false)
-  attr(:current_time, :any, default: DateTime.utc_now())
+  attr(:current_time, DateTime, default: DateTime.utc_now())
 
   def render(assigns) do
     ~H"""
