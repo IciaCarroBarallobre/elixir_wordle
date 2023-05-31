@@ -34,4 +34,4 @@ config :wallaby,
 config :elixir_wordle, :words_api, ElixirWordle.MockWordsAPI
 
 # End results delay to 0
-config :elixir_wordle, :end_delay, 0
+config :elixir_wordle, :display_results_delay, 0
