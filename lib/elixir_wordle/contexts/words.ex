@@ -11,19 +11,16 @@ defmodule ElixirWordle.Words do
   @behaviour ElixirWordle.WordsAPI
 
   @doc """
-  The function retrieves a word based on the current day of the year
-  and the number of available rows in the database.
-
-  If the word for the current day does not exist in the database,
-  an error message is returned.
-
+  todays_word/0 retrieves a word by ID, which is calculated using the remainder of today's day
+  divided by total database rows to prevent selecting nonexistent numbers,
+  considering incremental word IDs. If the word doesn't exist, it returns an error message.
   ## Examples
 
       iex> get_todays_word()
       {:ok, %Word{_}}
 
       iex> get_todays_word()
-      {:error, "Word not available"}
+      {:error, "Today's word is not available"}
 
   """
   @impl ElixirWordle.WordsAPI
