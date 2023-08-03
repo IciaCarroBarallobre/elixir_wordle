@@ -1,9 +1,11 @@
 # Elixir Wordle
+
 You can see the deployment result of main branch on:
 
 [![ElixirWordle](https://img.shields.io/badge/elixir_wordle_link-%23990599.svg?style=for-the-badge)](https://elixir-wordle.fly.dev/)
 
 [![GitHub version](https://badge.fury.io/gh/IciaCarroBarallobre%2Felixir_wordle.svg)](https://github.com/IciaCarroBarallobre/elixir_wordle)
+
 ## Table of contents
 
 1. [Game description](#game-description) 🎲
@@ -14,11 +16,12 @@ You can see the deployment result of main branch on:
 
 ## Game description
 
-**Elixir Wordle** is a game that can be played on the web, where players aim to **guess a word related to Elixir programming language**. 
+**Elixir Wordle** is a game that can be played on the web, where players aim to **guess a word related to Elixir programming language**.
 
 **Every day, a random word is chosen**, and players are given **the word's length**, **a clue**, and **six chances** to guess the word. After each guess, players receive **feedback to help them** narrow down the possibilities and make a more informed guess.
 
 Example:
+
 - **Incorrect letters** are displayed in **gray** (⬜).
 - **Correct letters** in **yellow** (🟨).
 - **Correctly placed letters** in **green** (🟩).
@@ -37,7 +40,7 @@ CLUE: "Datatype"
 
 **Prerequisites**: Elixir 1.14.1, Erlang/OTP 25.1, PostgreSQL.
 
-1. Clone the repo: `git clone git@github.com:IciaCarroBarallobre/elixir_wordle.git` 
+1. Clone the repo: `git clone git@github.com:IciaCarroBarallobre/elixir_wordle.git`
 2. Install dependencies: `mix deps.get`.
 3. Configure DB, creation and migration:  `mix ecto.setup`.
 4. Start Phoenix endpoint `mix phx.server` or `iex -S mix phx.server`(inside IEx).
@@ -62,6 +65,7 @@ mix test --only wallaby
 ## Design Info
 
 For additional [documentation about the design](./docs/design.md) like:
+
 - Mockups  📱
 - Flow diagram 📊
 - Sequence diagram 📊

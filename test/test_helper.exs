@@ -1,8 +1,12 @@
+ExUnit.start()
+ExUnit.configure(exclude: [:wallaby])
+
+# Mocking tests
 Mox.defmock(ElixirWordle.WordsMock, for: ElixirWordle.WordsAPI)
 Application.put_env(:elixir_wordle, :wordle_api, ElixirWordle.WordsMock)
 
-ExUnit.start()
-ExUnit.configure(exclude: [:wallaby])
+# Sandbox
+Ecto.Adapters.SQL.Sandbox.mode(ElixirWordle.Repo, :manual)
 
 # Wallaby
 {:ok, _} = Application.ensure_all_started(:wallaby)

@@ -62,9 +62,6 @@ defmodule ElixirWordle.Wordle do
 
       {:error, msg} ->
         {:error, msg}
-
-      _ ->
-        {:error, "Error"}
     end
   end
 
