@@ -3,8 +3,6 @@ defmodule ElixirWordle.Words do
   The Words context.
   """
 
-  @avaliable_words 91
-
   import Ecto.Query, warn: false
 
   alias ElixirWordle.Repo
@@ -31,7 +29,8 @@ defmodule ElixirWordle.Words do
   @impl ElixirWordle.WordsAPI
   def get_todays_word() do
     day = Date.day_of_year(Date.utc_today())
-    id = rem(day, @avaliable_words)
+    available_words = ElixirWordle.Repo.one(from(w in "words", select: fragment("count(*)")))
+    id = rem(day, available_words)
 
     case get_word(id) do
       %Word{word: word, clue: clue, description: description} ->
@@ -43,7 +42,7 @@ defmodule ElixirWordle.Words do
   end
 
   @doc """
-  Gets a single word if id exists in db, otherwise, nil.
+  Retrieves a word from the database if the ID exists, otherwise returns nil.
 
   ## Examples
 
@@ -57,9 +56,8 @@ defmodule ElixirWordle.Words do
   def get_word(id), do: Repo.get_by(Word, id: id)
 
   @doc """
-  If the changeset validations are passed, this function generates a word.
-  Otherwise, the function returns the `:error` status along with
-  the changeset containing information about the error.
+  If the changeset validations pass, this function creates a word.
+  Otherwise, it returns the `:error` status along with the changeset containing error information.
 
   ## Examples
 
@@ -72,7 +70,7 @@ defmodule ElixirWordle.Words do
         clue: "longestwordthanallowed appears in the clue" ,
         description: nil
       })
-      {:error, %Ecto.Changeset{}}
+      {:error, %Ecto.Changeset{_}}
 
 
   """
