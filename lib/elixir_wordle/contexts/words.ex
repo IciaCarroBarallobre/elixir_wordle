@@ -26,7 +26,7 @@ defmodule ElixirWordle.Words do
   @impl ElixirWordle.WordsAPI
   def get_todays_word() do
     day = Date.day_of_year(Date.utc_today())
-    available_words = ElixirWordle.Repo.one(from(w in "words", select: fragment("count(*)")))
+    available_words = Repo.one(from(w in "words", select: fragment("count(*)")))
     id = rem(day, available_words)
 
     case get_word(id) do
