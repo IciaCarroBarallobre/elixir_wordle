@@ -3,11 +3,21 @@ defmodule ElixirWordleWeb.WordleLive do
   import ElixirWordleWeb.ErrorComponents
 
   alias ElixirWordle.Wordle
+  alias ElixirWordle.Words
 
-  @words Application.compile_env(:elixir_wordle, :words_api, ElixirWordle.Words)
+  @words Application.compile_env(:elixir_wordle, :words_api, Words)
 
+  @doc """
+  is_valid_size?/1 is needed to verify the proper functioning of components like
+  guesses_board and inputs_words.
+  """
   defguard is_valid_size?(word) when byte_size(word) > 2 and byte_size(word) < 9
 
+  @doc """
+  new_game?/1 schedule the next day's word, fetch today's word, and if it's valid,
+  initialize the attempts and start the game. If not, display an error view and set attempts to 0.
+  This function is called once per day.
+  """
   def new_game(socket) do
     schedule(:next_word)
 
@@ -36,6 +46,13 @@ defmodule ElixirWordleWeb.WordleLive do
 
   def mount(_params, _session, socket), do: {:ok, socket |> new_game()}
 
+  @doc """
+  handle_event?("submit", _) try to `Wordle.play/2` with the guess provided.
+  If :ok is returned, assess if attempts end due to a win or no more attempts,
+  scheduling display_results if so. Otherwise, generate a new attempt.
+
+  In case of an error in `Wordle.play/2`, display an appropriate message.
+  """
   def handle_event("submit", %{"guess" => guess}, %{assigns: %{game: old_game}} = socket) do
     case Wordle.play(old_game, guess) do
       {:ok, game} ->
