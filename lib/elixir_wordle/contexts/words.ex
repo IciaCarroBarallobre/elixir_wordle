@@ -27,7 +27,7 @@ defmodule ElixirWordle.Words do
   def get_todays_word() do
     day = Date.day_of_year(Date.utc_today())
     available_words = Repo.one(from(w in "words", select: fragment("count(*)")))
-    id = rem(day, available_words)
+    id= if available_words > 0, do: rem(day, available_words), else: -1
 
     case get_word(id) do
       %Word{word: word, clue: clue, description: description} ->
