@@ -8,7 +8,22 @@ defmodule ElixirWordle.WordsTest do
   alias ElixirWordle.Words.Word
 
   setup do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
+    Ecto.Adapters.SQL.Sandbox.checkout(Repo)
+    # Reset the sequence before each test
+    Ecto.Adapters.SQL.query(Repo, "SELECT setval('words_id_seq', 1, false)", [])
+    :ok
+  end
+
+  describe "get_todays_word/1" do
+    test "get_todays_word/1 returns a word if there are available words" do
+      created_word = word_fixture()
+      assert {:ok, returned_word} = Words.get_todays_word()
+      assert created_word.word == returned_word.word
+    end
+
+    test "get_todays_word/1 returns :error when there aren't available words or todays' word doesn't exist" do
+      assert {:error, _msg} = Words.get_todays_word()
+    end
   end
 
   describe "get_word/1" do
