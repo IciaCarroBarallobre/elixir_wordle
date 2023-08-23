@@ -1,21 +1,43 @@
 defmodule ElixirWordle.WordsTest do
-  use ElixirWordle.DataCase
+  use ExUnit.Case, async: true
 
+  import ElixirWordle.WordsFixtures
+
+  alias ElixirWordle.Repo
   alias ElixirWordle.Words
   alias ElixirWordle.Words.Word
 
-  describe "words context test" do
-    import ElixirWordle.WordsFixtures
+  setup do
+    Ecto.Adapters.SQL.Sandbox.checkout(Repo)
+    # Reset the sequence before each test
+    Ecto.Adapters.SQL.query(Repo, "SELECT setval('words_id_seq', 1, false)", [])
+    :ok
+  end
 
-    test "get_word/1 returns the word with given id if exists" do
+  describe "get_todays_word/1" do
+    test "get_todays_word/1 returns a word if there are available words" do
+      created_word = word_fixture()
+      assert {:ok, returned_word} = Words.get_todays_word()
+      assert created_word.word == returned_word.word
+    end
+
+    test "get_todays_word/1 returns :error when there aren't available words or todays' word doesn't exist" do
+      assert {:error, _msg} = Words.get_todays_word()
+    end
+  end
+
+  describe "get_word/1" do
+    test "get_word/1 returns the word for an existing id" do
       word = word_fixture()
       assert Words.get_word(word.id) == word
     end
 
-    test "get_word/1 returns nil if the word id doesn't exist" do
+    test "get_word/1 returns nil when id doesn't exist" do
       assert is_nil(Words.get_word(1))
     end
+  end
 
+  describe "create_word/1" do
     test "create_word/1 with valid data creates a word" do
       valid_attrs = %{
         word: "elixir",
