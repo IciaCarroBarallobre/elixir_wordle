@@ -13,7 +13,8 @@ defmodule ElixirWordle.Words do
   @doc """
   todays_word/0 retrieves a word by ID, which is calculated using the remainder of today's day
   divided by total database rows to prevent selecting nonexistent numbers,
-  considering incremental word IDs. If the word doesn't exist, it returns an error message.
+  considering incremental word IDs. If the word doesn't exist or if there aren't rows in db,
+  it returns an error message.
   ## Examples
 
       iex> get_todays_word()
