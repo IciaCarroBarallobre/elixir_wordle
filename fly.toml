@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for elixir-wordle on 2023-08-22T23:52:12+02:00
+# fly.toml app configuration file generated for elixir-wordle on 2023-08-23T14:35:40+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -6,7 +6,11 @@
 app = "elixir-wordle"
 primary_region = "mad"
 kill_signal = "SIGTERM"
+kill_timeout = "5s"
 swap_size_mb = 512
+
+[experimental]
+  auto_rollback = true
 
 [build]
 
@@ -16,15 +20,27 @@ swap_size_mb = 512
 [env]
   PHX_HOST = "elixir-wordle.fly.dev"
   PORT = "8080"
+  PRIMARY_REGION = "mad"
 
-[http_service]
+[[services]]
+  protocol = "tcp"
   internal_port = 8080
-  force_https = true
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 1
   processes = ["app"]
-  [http_service.concurrency]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+  [services.concurrency]
     type = "connections"
     hard_limit = 1000
     soft_limit = 1000
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "1s"
